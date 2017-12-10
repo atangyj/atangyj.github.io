@@ -98,6 +98,7 @@ footer {
     animation-duration: 7s;
     animation-timing-function: ease-in;
     animation-fill-mode: forwards;
+    animation-iteration-count: 3;
     
 }
 
@@ -128,3 +129,148 @@ footer {
 .desc span{
     font-size: 12px;
 }
+
+/***********day2**********/
+
+.day2 {
+    position: relative;
+    background-color: #214a96;
+    animation-name: back-color;
+    animation-fill-mode: forwards;
+    animation-duration: 15s;
+}
+
+.tree-body {
+    border-bottom: 320px solid #000;
+    border-left: 13px solid transparent;
+    border-right: 16px solid transparent;
+    width: 18px;
+    height: 0;
+    position: absolute;
+    bottom: 0;
+    animation: layer 5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+
+.branch-rt {
+    border-bottom: 130px solid #000;
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent;
+    width: 8px;
+    height: 0;
+    position: absolute;
+    left: 200px;
+    bottom: 180px;
+    transform: rotate(35deg);
+    animation: layer 10s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in;
+}
+
+.branch-lt {
+    border-bottom: 120px solid #000;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    width: 8px;
+    height: 0;
+    position: absolute;
+    right: 210px;
+    bottom: 200px;
+    transform: rotate(-45deg);
+    animation: layer-r 5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+.branch-rb {
+    border-bottom: 150px solid #000;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    width: 10px;
+    height: 0;
+    position: absolute;
+    right: 230px;
+    bottom: 100px;
+    transform: rotate(-55deg);
+    animation: layer-r 5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+.branch-lb {
+    border-bottom: 150px solid #000;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    width: 10px;
+    height: 0;
+    position: absolute;
+    left: 230px;
+    bottom: 80px;
+    transform: rotate(50deg);
+    animation: layer 5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes snowing {
+    from {top:0; left: 100px;}
+    to {top:340px; left: 103px;}
+}
+
+@keyframes snowing2 {
+    from {top:0; left: 200px;}
+    to {top:340px; left: 205px;}
+}
+
+@keyframes layer {
+    from {border-left: none;}
+    to {border-left: 8px solid rgba(256, 256, 256, 0.9)}
+}
+
+
+@keyframes layer-r {
+    from {border-right: none;}
+    to {border-right: 8px solid rgba(256, 256, 256, 0.9)}
+}
+
+@keyframes back-color{
+    from {background: #214a96;}
+    to {background:#1a3c68;}
+}
+
+.snow-1 {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(256, 256, 256,0.5);
+    border: 1px solid rgba(256,256,256,0.8);
+    margin: 0px 30px;
+    position: absolute;
+    left: 100px;
+    top: 0px;
+    animation: snowing 3s;
+    animation-iteration-count: 5;
+    animation-timing-function: ease-in;
+}
+
+.snow-2 {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(256, 256, 256,0.8);
+    border: 1px solid rgba(256,256,256,1);
+    margin: 0px 30px;
+    position: absolute;
+    left: 180px;
+    top: -3px;
+    animation: snowing2 3s;
+    animation-iteration-count: 5;
+    animation-timing-function: ease-in;
+    animation-delay: 1s;
+}
+
+
+
+
