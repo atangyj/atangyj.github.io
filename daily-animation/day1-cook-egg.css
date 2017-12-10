@@ -90,17 +90,14 @@ footer {
         0 -5px 0 rgba(256, 256, 256, 0.2);
     border-top: 2px solid rgba(256, 256, 256, 0.5);
     border-left: 2px solid rgba(256, 256, 256, 0.5);
-    
-}
-
-.pan:hover .egg-outer{
     animation-name: cook;
     animation-duration: 7s;
     animation-timing-function: ease-in;
     animation-fill-mode: forwards;
     animation-iteration-count: 3;
-    
 }
+
+
 
 .pan:hover {
     cursor: pointer;
