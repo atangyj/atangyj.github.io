@@ -1,3 +1,4 @@
-# My personal web
+# Daily Animation
 
-akljdfljasdlf
+This project is a record of my html and practice.
+The topic of animation is all about waiting.
