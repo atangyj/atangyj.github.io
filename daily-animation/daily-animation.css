@@ -315,6 +315,7 @@ footer {
     animation-timing-function: linear;
     box-shadow: 0px -6px 0 #000;
     border-radius: 2px;
+    animation-iteration-count: 5;
 }
 
 .minute {
@@ -331,6 +332,7 @@ footer {
     animation-fill-mode: forwards;
     animation-timing-function: linear;
     animation-delay: 9s;
+    animation-iteration-count: 5;
     border-left: 3px solid transparent;
     border-right: 3px solid transparent;
     border-bottom: 90px solid #000;
@@ -351,6 +353,7 @@ footer {
     animation-duration: 10s;
     animation-fill-mode: forwards;
     animation-timing-function: ease-in-out;
+    animation-iteration-count: 5;
     
 }
 
