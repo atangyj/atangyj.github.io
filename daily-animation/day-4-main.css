@@ -1,0 +1,86 @@
+
+.leaf {
+  width: 40px;
+  height: 340px;
+  background: linear-gradient(to right, rgba(244, 236, 181, 0.7), rgba(244, 236, 181, 0.7));
+  position: absolute;
+  top: 10px;
+  animation: leaf-rotation 10s ease 0s 1 normal;
+  animation-fill-mode: both; }
+
+.day4 {
+  width: 350px;
+  height: 350px;
+  background: #92d4ee;
+  position: relative;
+  animation: sky-color 10s ease 0s 1 normal;
+  animation-fill-mode: both; }
+
+.ceiling {
+  width: 350px;
+  height: 12px;
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5; }
+
+.leaf:nth-child(1) {
+  left: 0px; }
+
+.leaf:nth-child(2) {
+  left: 30px; }
+
+.leaf:nth-child(3) {
+  left: 60px; }
+
+.leaf:nth-child(4) {
+  left: 90px; }
+
+.leaf:nth-child(5) {
+  left: 120px; }
+
+.leaf:nth-child(6) {
+  left: 150px; }
+
+.leaf:nth-child(7) {
+  left: 180px; }
+
+.leaf:nth-child(8) {
+  left: 210px; }
+
+.leaf:nth-child(9) {
+  left: 240px; }
+
+.leaf:nth-child(10) {
+  left: 270px; }
+
+.leaf:nth-child(11) {
+  left: 300px; }
+
+@keyframes sky-color {
+  0% {
+    background: #92d4ee; }
+  25% {
+    background: #92d4ee; }
+  75% {
+    background: #124683; }
+  100% {
+    background: #124683; } }
+@keyframes leaf-rotation {
+  0% {
+    transform: skewY(0deg);
+    background: linear-gradient(to right, rgba(244, 236, 181, 0.7), rgba(244, 236, 181, 0.7)); }
+  25% {
+    transform: skewY(60deg);
+    background: linear-gradient(to right, #f9f2c0 60%, rgba(244, 236, 181, 0.5) 40%);
+    width: 10px; }
+  75% {
+    transform: skewY(60deg);
+    background: linear-gradient(to right, rgba(244, 236, 181, 0.5) 60%, #f9f2c0 40%);
+    width: 10px; }
+  100% {
+    transform: skewY(0deg);
+    background: linear-gradient(to right, rgba(244, 236, 181, 0.7), rgba(244, 236, 181, 0.7)); } }
+
+/*# sourceMappingURL=day-4-main.css.map */
