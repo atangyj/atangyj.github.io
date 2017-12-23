@@ -1,4 +1,4 @@
-# 
+# About me
 
 atangyj.github.io is my record of learning web development skill.
 * The topic of [Daily-Animation](atangyj.github.io/daily-animation/daily-animation.html) project is all about waiting.
