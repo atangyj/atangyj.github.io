@@ -1,4 +1,5 @@
-# Daily Animation
+# About me
 
-This project is a record of my html and practice.
-The topic of animation is all about waiting.
+atangyj.github.io is my record of learning web development skill.
+* The topic of [Daily-Animation](atangyj.github.io/daily-animation/daily-animation.html) project is all about waiting.
+* The [BMLab](https://atangyj.github.io/BMLab/home.html) project is a redesign for the lab I was studying neuroscience.
