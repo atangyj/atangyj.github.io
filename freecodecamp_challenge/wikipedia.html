@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Wikipedia</title>
+  <style>
+    a:link {
+      text-decoration: none;
+      color: #000;
+
+    }
+
+    a>div {
+      border: 1px solid grey;
+    }
+  </style>
+</head>
+
+<body>
+  <input type="text" name="search" id="query">
+  <input type="submit" value="Submit" id="search-button">
+  <a href="https://en.wikipedia.org/wiki/Special:Random" , target="_blank">Something new</a>
+  <div id='result-container'></div>
+
+  <script>
+    document.getElementById('search-button').onclick = getSearchResults;
+
+    function getQuery() {
+      return document.getElementById('query').value;
+    }
+
+    function getSearchResults() {
+      var query = getQuery();
+      var url = 'https://en.wikipedia.org/w/api.php?action=query&formatversion=2&generator=prefixsearch&gpssearch=' + query +
+        '&gpslimit=10&prop=info|pageterms&inprop=url&wbptterms=description&format=json&formatversion=2&origin=*';
+      request = new XMLHttpRequest;
+      request.onload = function() {
+        if (request.status == 200) {
+          var results = JSON.parse(request.responseText);
+          console.log(results);
+          displaySearchResult(results);
+
+
+        }
+      };
+      request.open('GET', url);
+      request.send(null);
+
+      function displaySearchResult(results) {
+        var pages = results.query.pages;
+
+        for (var i = 0; i < pages.length; i++) {
+          var link = document.createElement('a');
+          var attrLink = document.createAttribute('href');
+          var attrTarget = document.createAttribute('target');
+          attrLink.value = pages[i].canonicalurl;
+          attrTarget.value = '_blank';
+          link.setAttributeNode(attrLink);
+          link.setAttributeNode(attrTarget);
+          var listView = document.createElement('div');
+          link.appendChild(listView);
+          document.getElementById('result-container').appendChild(link);
+          var title = document.createElement('h5');
+          var titleText = document.createTextNode(pages[i].title);
+          title.appendChild(titleText);
+          listView.appendChild(title);
+
+          if (pages[i].hasOwnProperty('terms')) {
+
+            var description = document.createElement('p');
+            var descText = document.createTextNode(pages[i].terms.description);
+            description.appendChild(descText);
+            listView.appendChild(description);
+          }
+
+        }
+      }
+
+    }
+  </script>
+</body>
+
+</html>

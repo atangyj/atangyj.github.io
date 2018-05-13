@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tweet Quote</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #bg {
+      height: 100%;
+      background: url('Shakespeare.jpg') no-repeat center;
+      background-size: cover;
+      position: relative;
+
+    }
+
+    #quote-container {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid white;
+      border-radius: 6px;
+      width: 600px;
+      height: 250px;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .user-name {
+      height: 50px;
+      margin: 4%;
+      position: relative;
+      /* border: 1px solid red; */
+    }
+
+    .avatar {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      vertical-align: line;
+      margin-right: 10px;
+
+    }
+
+    .author {
+      display: inline-block;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 300;
+      color: white;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #tweet-btn {
+      position: absolute;
+      left: 4%;
+      bottom: 4%;
+    }
+
+    #tweet-btn img {
+      width: 30px;
+      height: 30px;
+
+    }
+
+    #gene-quote-btn {
+      position: absolute;
+      bottom: 4%;
+      right: 4%;
+      width: 80px;
+      height: 30px;
+      border-radius: 3px;
+      border: 0;
+      font-size: 12px;
+    }
+
+    #quote-text {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-left: 4%;
+      font-size: 24px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="bg">
+    <div id="quote-container">
+      <div class="user-name">
+        <img src="mucha_hamlet.jpg" class="avatar">
+        <p class="author">William Shakespeare<br>@JosephF</p>
+      </div>
+      <p id="quote-text"></p>
+      <a id="tweet-btn"><img src="Twitter_Social_Icon_Rounded_Square_White.png"></a>
+      <button id="gene-quote-btn">New Quote</button>
+    </div>
+  </div>
+
+
+  <script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
+  <script>
+    window.onload = function() {
+      // quotes content
+
+      var quotes = ["The course of true love never did run smooth.",
+        "Be not afraid of greatness: some are born great, some achieve greatness and some have greatness thrust upon them.",
+        "Neither a borrower nor a lender be; for loan oft loses both itself and friend.",
+        "All that glisters is not gold.",
+        "Love sought is good, but given unsought is better.",
+        "Who ever loved that loved not at first sight?",
+        "If music be the food of love, play on."
+      ];
+
+
+
+      // Binding handler
+      document.getElementById('gene-quote-btn').onclick = randQuote;
+      document.getElementById('tweet-btn').onclick = tweetQuote;
+
+      // Get elements
+      var quoteArea = document.getElementById('quote-text');
+      var randNum, newQuote;
+
+      randQuote();
+
+      function randQuote() {
+        randNum = Math.floor(Math.random() * quotes.length);
+        newQuote = quotes[randNum];
+        quoteArea.innerHTML = newQuote;
+      }
+
+      function tweetQuote() {
+        var encodeQuote = encodeURIComponent(newQuote);
+        var url = "https://twitter.com/intent/tweet?text=" + encodeQuote;
+        window.open(url);
+      }
+    }
+  </script>
+</body>
+
+</html>

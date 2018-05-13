@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Pomodoro</title>
+
+  <style>
+    #countdown-container:hover {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <p>Break Length</p>
+    <p id="break-length"></p>
+  </div>
+
+  <div>
+    <p>Session Length</p>
+    <p id="session-length"></p>
+  </div>
+
+  <div id="countdown-container">
+    <p>Session</p>
+    <p id="remain-length"></p>
+  </div>
+  <script>
+    window.onload = function() {
+      var breakLength = 5,
+        sessionLength = 25;
+      remainTime = sessionLength;
+
+      displayBreakLength();
+      displaySessionLength();
+
+
+      document.getElementById('countdown-container').onclick = countdown;
+
+      function displayBreakLength() {
+        document.getElementById('break-length').innerHTML = breakLength;
+      }
+
+      function displaySessionLength() {
+        document.getElementById('session-length').innerHTML = sessionLength;
+        document.getElementById('remain-length').innerHTML = sessionLength;
+      }
+
+      function countdown() {
+        var remainEle = document.getElementById('remain-length');
+        var timeout = setInterval(displayCountdown, 1000);
+
+        function displayCountdown() {
+          remainTime = remainTime - 1;
+          remainEle.innerHTML = remainTime;
+          if (remainTime == 0) {
+            clearInterval(timeout);
+          }
+        }
+
+      }
+
+    }
+  </script>
+</body>
+
+</html>

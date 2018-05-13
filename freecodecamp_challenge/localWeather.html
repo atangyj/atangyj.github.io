@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Local Weather</title>
+
+</head>
+
+<body>
+  <div id="cityName"></div>
+  <div id="desc"></div>
+  <div id="temp" class="celsius"></div>
+  <img id="icon">
+
+
+  <script>
+    window.onload =
+      function() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(getCoords, fail);
+        } else {
+          alert("geolocation is not supported");
+        }
+
+        var temp = document.getElementById("temp");
+        temp.onclick = toggleUnit;
+      }
+
+    function getCoords(position) {
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
+
+      getWeather(lat, lon);
+      getCityName(lat, lon);
+    }
+
+    function fail(errorMsg) {}
+
+
+    function getWeather(latitude, longitude) {
+      var request = new XMLHttpRequest();
+      var url = "https://fcc-weather-api.glitch.me/api/current?lat=" + latitude + "&lon=" + longitude;
+      request.open("GET", url);
+      request.onload = function() {
+        if (request.status == 200) {
+          var response = JSON.parse(request.responseText);
+          var weather = {
+            desc: response.weather[0].main,
+            icon: response.weather[0].icon,
+            temp: response.main.temp
+          }
+          document.getElementById("desc").innerHTML = weather.desc;
+          document.getElementById("icon").setAttribute("src", weather.icon);
+          document.getElementById("temp").innerHTML = weather.temp;
+        }
+      };
+      request.send(null);
+    }
+
+    function getCityName(latitude, longitude) {
+      var request = new XMLHttpRequest();
+      var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&key=AIzaSyAa3ISQTUoVs3kfaFu-Wtub7IlfMBVTDgM";
+      request.open("GET", url);
+      request.onload = function() {
+        if (request.status == 200) {
+          var cityName = JSON.parse(request.responseText).results[0].address_components[4].short_name;
+          document.getElementById("cityName").innerHTML = cityName;
+        }
+      };
+      request.send(null);
+
+    }
+
+    function toggleUnit(eventObj) {
+      var unit = eventObj.target.className;
+      var degree = eventObj.target.innerHTML;
+      var ele = document.getElementById("temp")
+      if (unit == "celsius") {
+        ele.innerHTML = Math.round(degree * 9 / 5 + 32);
+        ele.className = "fahrenheit";
+
+      } else {
+        ele.innerHTML = Math.round((degree - 32) * 5 / 9);
+        ele.className = "celsius";
+      }
+    }
+  </script>
+</body>
+
+</html>

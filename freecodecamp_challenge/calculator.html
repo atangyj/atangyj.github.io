@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Calculator</title>
+  <style>
+    .numBtn,
+    .initOpt,
+    .opBtn:hover {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <input type="button" class="numBtn" value="0">
+  <input type="button" class="numBtn" value="1">
+  <input type="button" class="numBtn" value="2">
+  <input type="button" class="numBtn" value="3">
+  <input type="button" class="numBtn" value="4">
+  <input type="button" class="numBtn" value="5">
+  <input type="button" class="numBtn" value="6">
+  <input type="button" class="numBtn" value="7">
+  <input type="button" class="numBtn" value="8">
+  <input type="button" class="numBtn" value="9">
+  <input type="button" class="opBtn" value="add">
+  <input type="button" class="opBtn" value="minus">
+  <input type="button" class="opBtn" value="multiply">
+  <input type="button" class="opBtn" value="divide">
+  <input type="button" class="opBtn" value="equality">
+  <input type="button" class="initOpt initAdd" value="+/-">
+
+
+  <script>
+    var singleInput, inputNum;
+    var allInput = '';
+    var curTotal = 0;
+    var tempTotal = 0;
+    var innerTotal = 1;
+    var initOperator = function() {
+      return undefined;
+    };
+    var tempOperator = operatorMultiplyn.add;
+    var numBtn = document.getElementsByClassName("numBtn");
+    var opBtn = document.getElementsByClassName('opBtn');
+    document.getElementsByClassName('initOpt')[0].onclick = changeOperator;
+
+    for (var i = 0; i < numBtn.length; i++) {
+      numBtn[i].onclick = saveInput;
+    }
+
+    for (var i = 0; i < opBtn.length; i++) {
+      opBtn[i].onclick = operation;
+    }
+
+    var operatorAddn = {
+      add: function() {
+        curTotal = curTotal + inputNum + tempTotal;
+      },
+      minus: function() {
+        curTotal = curTotal - inputNum + tempTotal;
+      }
+    }
+
+    var operatorMultiplyn = {
+      add: function() {
+        tempTotal = tempTotal + inputNum;
+      },
+      multiply: function() {
+        tempTotal = tempTotal * inputNum;
+      },
+      divide: function() {
+        tempTotal = tempTotal / inputNum;
+      }
+    }
+
+    function saveInput(e) {
+      singleInput = e.target.value;
+      allInput = allInput.concat(singleInput);
+
+    }
+
+    function operation(e) {
+      inputNum = parseInt(allInput);
+      allInput = '';
+      var operator = e.target.value;
+      if (operator == "add" || operator == "minus") {
+        tempOperator();
+        initOperator();
+        tempOperator = operatorMultiplyn.add;
+      } else if (operator == "multiply" || operator == "divide") {
+        tempOperator();
+        tempOperator = tempOperator[e.target.value];
+      }
+    }
+
+    function changeOperator() {
+      var ele = document.getElementsByClassName("initOpt")[0];
+      if (ele.className.indexOf("initAdd") > 0) {
+        initOperator = operators.minus;
+        ele.classList.toggle('initAdd');
+      } else {
+        initOperator = operators.add;
+        ele.classList.toggle('initAdd');
+      }
+    }
+  </script>
+</body>
+
+</html>

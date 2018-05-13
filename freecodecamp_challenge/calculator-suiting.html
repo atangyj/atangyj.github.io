@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Calculator</title>
+  <style>
+    .numBtn,
+    .initOpt,
+    .opBtn:hover {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <input type="button" class="numBtn" value="0">
+  <input type="button" class="numBtn" value="1">
+  <input type="button" class="numBtn" value="2">
+  <input type="button" class="numBtn" value="3">
+  <input type="button" class="numBtn" value="4">
+  <input type="button" class="numBtn" value="5">
+  <input type="button" class="numBtn" value="6">
+  <input type="button" class="numBtn" value="7">
+  <input type="button" class="numBtn" value="8">
+  <input type="button" class="numBtn" value="9">
+  <input type="button" class="opBtn" value="add">
+  <input type="button" class="opBtn" value="minus">
+  <input type="button" class="opBtn" value="multiply">
+  <input type="button" class="opBtn" value="divide">
+  <input type="button" class="opBtn" value="equality">
+  <input type="button" class="initOpt initAdd" value="+/-">
+
+
+  <script>
+    var opend1, operator, opend2;
+    var allInput = '';
+    var curTotal = 0;
+    var innerTotal = 1;
+    var initOperator = operators.add;
+    var numBtn = document.getElementsByClassName("numBtn");
+    var opBtn = document.getElementsByClassName('opBtn');
+    document.getElementsByClassName('initOpt')[0].onclick = changeOperator;
+
+    for (var i = 0; i < numBtn.length; i++) {
+      numBtn[i].onclick = saveInput;
+    }
+
+    for (var i = 0; i < opBtn.length; i++) {
+      opBtn[i].onclick = operation;
+    }
+
+    var operators = {
+      add: function() {
+        curTotal = curTotal + inputNum;
+      },
+      minus: function() {
+        curTotal = curTotal - inputNum;
+      },
+      multiply: function() {
+        curTotal = curTotal * inputNum;
+        curTotal = curTotal + tempTotal;
+      },
+      divide: function() {
+        curTotal = curTotal / inputNum;
+        curTotal = curTotal + tempTotal;
+      }
+    }
+
+
+    function saveInput(e) {
+      singleInput = e.target.value;
+      allInput = allInput.concat(singleInput);
+
+    }
+
+    function operation(e) {
+      inputNum = parseInt(allInput);
+      allInput = '';
+      var operator = e.target.value;
+      if (operator == "add" || operator == "minus") {
+        initOperator();
+      } else if (operator == "multiply" || operator == "divide") {
+
+      }
+
+      if (e.target.value == 'equality') {
+        initOperator = operators.add;
+      } else {
+        initOperator = operators[e.target.value];
+      }
+    }
+
+    function changeOperator() {
+      var ele = document.getElementsByClassName("initOpt")[0];
+      if (ele.className.indexOf("initAdd") > 0) {
+        initOperator = operators.minus;
+        ele.classList.toggle('initAdd');
+      } else {
+        initOperator = operators.add;
+        ele.classList.toggle('initAdd');
+      }
+    }
+  </script>
+</body>
+
+</html>
