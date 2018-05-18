@@ -72,12 +72,14 @@
         function displayCountdown() {
           if (pause) {
 
-            remainTime = remainTime - 1;
-            remainEle.innerHTML = remainTime;
-
-            if (remainTime == 0) {
+            if (remainTime <= 0) {
               clearInterval(timeout);
+              remainEle.innerHTML = 0;
+            } else {
+              remainTime = remainTime - 1;
+              remainEle.innerHTML = remainTime;
             }
+
           } else {
             clearInterval(timeout);
           }
