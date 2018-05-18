@@ -26,16 +26,19 @@
     <p>Session</p>
     <p id="remain-length"></p>
   </div>
+
+  <button id="pause">pause</button>
+
   <script>
     window.onload = function() {
       var breakLength = 5,
-        sessionLength = 20;
+        sessionLength = 10;
       remainTime = sessionLength;
 
       displayBreakLength();
       displaySessionLength();
 
-
+      document.getElementById('pause').onclick = pauseCountdown;
       document.getElementById('countdown-container').onclick = countdown;
 
       function displayBreakLength() {
@@ -47,23 +50,38 @@
         document.getElementById('remain-length').innerHTML = sessionLength;
       }
 
+      var pause = true;
+
+      function pauseCountdown() {
+        if (document.getElementById('pause').innerHTML == 'pause') {
+          document.getElementById('pause').innerHTML = 'resume';
+          pause = false;
+        } else {
+          pause = true;
+          document.getElementById('pause').innerHTML = 'pause';
+          countdown();
+        }
+      }
+
+
+
       function countdown() {
-        var remainEle = document.getElementById('remain-length');
-        document.getElementById('countdown-container').classList.toggle('isCountdown');
-
         var timeout = setInterval(displayCountdown, 1000);
-
+        var remainEle = document.getElementById('remain-length');
 
         function displayCountdown() {
-          remainTime = remainTime - 1;
-          remainEle.innerHTML = remainTime;
+          if (pause) {
 
-          if (remainTime == 0) {
+            remainTime = remainTime - 1;
+            remainEle.innerHTML = remainTime;
+
+            if (remainTime == 0) {
+              clearInterval(timeout);
+            }
+          } else {
             clearInterval(timeout);
           }
-          if (document.getElementById('countdown-container').className !== 'isCountdown') {
-            clearInterval(timeout);
-          }
+
         }
       }
 
