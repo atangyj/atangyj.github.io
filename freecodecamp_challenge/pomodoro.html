@@ -29,7 +29,7 @@
   <script>
     window.onload = function() {
       var breakLength = 5,
-        sessionLength = 25;
+        sessionLength = 20;
       remainTime = sessionLength;
 
       displayBreakLength();
@@ -49,16 +49,22 @@
 
       function countdown() {
         var remainEle = document.getElementById('remain-length');
+        document.getElementById('countdown-container').classList.toggle('isCountdown');
+
         var timeout = setInterval(displayCountdown, 1000);
+
 
         function displayCountdown() {
           remainTime = remainTime - 1;
           remainEle.innerHTML = remainTime;
+
           if (remainTime == 0) {
             clearInterval(timeout);
           }
+          if (document.getElementById('countdown-container').className !== 'isCountdown') {
+            clearInterval(timeout);
+          }
         }
-
       }
 
     }
