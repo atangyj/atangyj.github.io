@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tic Tac Toe</title>
+  <style>
+    #stage-1-mode,
+    #stage-2-symbol,
+    #stage-3-board {
+      background-color: #000;
+      width: 300px;
+      height: 300px;
+    }
+
+    #stage-2-symbol,
+    #stage-3-board,
+    #stage-4-result {
+      display: none;
+    }
+
+    #stage-4-result {
+      background-color: rgba(0, 0, 0, 0.7);
+      position: absolute;
+      top: 0;
+      left: 0;
+
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      background-color: #000;
+      border: 1px solid #fff;
+      display: inline-block;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="container">
+
+    <div id="stage-1-mode">
+      <button id="one" class="player">One Player</button>
+      <button id="two" class="player">Two Player</button>
+    </div>
+
+    <div id="stage-2-symbol">
+      <button id="circle" class="symbols">O</button>
+      <button id="cross" class="symbols">X</button>
+    </div>
+    <div id="stage-3-board">
+      <div id="msg"></div>
+      <div class="row">
+        <div class="cell" id='1'></div>
+        <div class="cell" id='2'></div>
+        <div class="cell" id='3'></div>
+      </div>
+
+      <div class="row">
+        <div class="cell" id='4'></div>
+        <div class="cell" id='5'></div>
+        <div class="cell" id='6'></div>
+      </div>
+
+      <div class="row">
+        <div class="cell" id='7'></div>
+        <div class="cell" id='8'></div>
+        <div class="cell" id='9'></div>
+      </div>
+    </div>
+    <div id="stage-4-result">
+
+    </div>
+  </div>
+  <script>
+    var view = {
+      displayChooseSymbol: function() {
+        document.getElementById('stage-1-mode').style.display = 'none';
+        document.getElementById('stage-2-symbol').style.display = 'block';
+      },
+
+      displayBoard: function() {
+        document.getElementById('stage-2-symbol').style.display = 'none';
+        document.getElementById('stage-3-board').style.display = 'block';
+      },
+      displayOrder: function(msg) {
+        document.getElementById('msg').innerHTML = msg;
+      },
+      displayHit: function(location, symbol) {
+        document.getElementById(location).innerHTML = symbol;
+        controller.isLine();
+      },
+      displaySingleHit: function(e) {
+        var index = model.location.indexOf(parseInt(e.target.id));
+        if (model.status[index] !== 'hit' && model.game == 0) {
+          model.status[index] = 'hit';
+          this.displayHit(model.location[index].toString(), model.players[0].symbol);
+        }
+        controller.computerFire();
+
+      },
+      displayTwoHit: function(e) {
+        var index = model.location.indexOf(parseInt(e.target.id));
+        if (model.status[index] !== 'hit' && model.game == 0) {
+          model.status[index] = 'hit';
+          this.displayHit(model.location[index].toString(), model.players[model.currentOrder].symbol);
+          if (model.currentOrder == 0) {
+            model.currentOrder = 1;
+          } else {
+            model.currentOrder = 0;
+          }
+          this.displayOrder(model.players[model.currentOrder].msg);
+        }
+      },
+      displayResult: function(msg) {
+
+        document.getElementById('stage-4-result').innerHTML = msg;
+        document.getElementById('stage-4-result').style.display = 'block';
+        this.displayDefault();
+
+      },
+      displayDefault: function() {
+        document.getElementById('stage-4-result').style.display = 'none';
+        model.game = 0;
+        model.status = ["", "", "", "", "", "", "", "", ""];
+        var cells = document.getElementsByClassName('cell');
+        for (var i = 0; i < cells.length; i++) {
+          cells[i].innerHTML = "";
+          cells[i].style.color = 'white';
+        }
+      }
+    };
+
+    var model = {
+      mode: "",
+      players: [{
+        symbol: "",
+        msg: "",
+        score: []
+      }, {
+        symbol: "",
+        msg: "",
+        score: []
+      }],
+      order: [],
+      currentOrder: [],
+      status: ["", "", "", "", "", "", "", "", ""],
+      location: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      game: 0
+
+    };
+    var controller = {
+      chooseMode: function(e) {
+        var mode = e.target.id;
+        model.mode = mode;
+        if (mode == "one") {
+          model.players[0].msg = "Your turn!";
+          model.players[1].msg = "Computer's turn";
+        } else {
+          model.players[0].msg = "Player one's turn!";
+          model.players[1].msg = "Player two's turn";
+        }
+        view.displayChooseSymbol();
+      },
+
+      chooseSymbol: function(e) {
+        var player_1_symbol = e.target.innerHTML;
+        model.players[0].symbol = player_1_symbol;
+        if (player_1_symbol == 'O') {
+          model.players[1].symbol = 'X'
+        } else {
+          model.players[1].symbol = 'O';
+        }
+        view.displayBoard();
+        if (model.mode == 'one') {
+          this.singleMode();
+        } else {
+          this.twoMode();
+        }
+      },
+      decideOrder: function() {
+        model.order = Math.floor(Math.random() * 2);
+        model.currentOrder = model.order;
+      },
+
+      singleMode: function() {
+        this.decideOrder();
+
+        if (model.order == 0) {
+          view.displayOrder(model.players[model.order].msg);
+          var cells = document.getElementsByClassName('cell');
+          for (var i = 0; i < cells.length; i++) {
+            cells[i].onclick = view.displaySingleHit.bind(view);
+          }
+        } else {
+          view.displayOrder(model.players[1].msg);
+          this.computerFire();
+          var cells = document.getElementsByClassName('cell');
+          for (var i = 0; i < cells.length; i++) {
+            cells[i].onclick = view.displaySingleHit.bind(view);
+          }
+        }
+
+      },
+      twoMode: function() {
+        this.decideOrder();
+        var cells = document.getElementsByClassName('cell');
+        for (var i = 0; i < cells.length; i++) {
+          cells[i].onclick = view.displayTwoHit.bind(view);
+        }
+        if (model.order == 0) {
+          view.displayOrder(model.players[model.order].msg);
+
+        } else {
+          view.displayOrder(model.players[model.order].msg);
+
+        }
+      },
+      computerFire: function() {
+        if (model.status.indexOf('') >= 0 && model.game == 0) {
+          var randNum = Math.floor(Math.random() * 9);
+          if (model.status[randNum] == 'hit') {
+            this.computerFire();
+          } else {
+            model.status[randNum] = 'hit';
+            view.displayHit(model.location[randNum].toString(), model.players[1].symbol);
+            view.displayOrder(model.players[0].msg);
+          }
+        }
+      },
+      isLine: function() {
+        var cells = document.getElementsByClassName('cell');
+
+        function decideLine(one, two, three) {
+          if (model.status[one] == 'hit' && model.status[two] == 'hit' && model.status[three] == 'hit') {
+            if (cells[one].innerHTML == cells[two].innerHTML && cells[two].innerHTML == cells[three].innerHTML) {
+              cells[one].style.color = 'blue';
+              cells[two].style.color = 'blue';
+              cells[three].style.color = 'blue';
+              model.game++;
+              if (model.mode == 'one') {
+                if (model.currentOrder == 0) {
+                  view.displayResult('You win!');
+                } else {
+                  view.displayResult('Computer win!');
+                }
+              } else {
+                if (model.currentOrder == 0) {
+                  view.displayResult('Player one win!');
+                } else {
+                  view.displayResult('Player two win!');
+                }
+              }
+            }
+          }
+        }
+
+        decideLine(0, 1, 2);
+        decideLine(3, 4, 5);
+        decideLine(6, 7, 8);
+        decideLine(0, 3, 6);
+        decideLine(1, 4, 7);
+        decideLine(2, 5, 8);
+        decideLine(0, 4, 8);
+        decideLine(2, 4, 6);
+      }
+
+
+
+    };
+
+    var modes = document.getElementsByClassName('player');
+    var symbols = document.getElementsByClassName('symbols');
+    for (var i = 0; i < modes.length; i++) {
+      modes[i].onclick = controller.chooseMode;
+    }
+    for (var i = 0; i < symbols.length; i++) {
+      symbols[i].onclick = controller.chooseSymbol.bind(controller);
+    }
+  </script>
+</body>
+
+</html>
