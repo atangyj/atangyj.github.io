@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Simon Game</title>
+  <style>
+    div {
+      height: 100px;
+      width: 100px;
+      display: block;
+    }
+
+
+
+    .button {
+      border: 5px solid #000;
+    }
+
+    #count {
+      color: black;
+    }
+
+    #green {
+      border-top-left-radius: 200px;
+      background-color: green;
+
+    }
+
+    #red {
+      border-top-right-radius: 200px;
+      background-color: red;
+
+    }
+
+    #yellow {
+      border-bottom-left-radius: 200px;
+      background-color: yellow;
+      /* display: inline-block; */
+    }
+
+    #blue {
+      border-bottom-right-radius: 200px;
+      background-color: blue;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <div class='row'> -->
+  <button id="start">Start</button>
+  <div id='count'></div>
+  <div id='green' class='button'></div>
+  <div id='red' class='button'></div>
+  <!-- </div> -->
+  <!-- <div class='row'> -->
+  <div id='yellow' class='button'></div>
+  <div id='blue' class='button'></div>
+  <!-- </div> -->
+  <script>
+    var model = {
+      mode: "",
+      count: 1,
+      steps: [],
+      buttons: ['blue', 'red', 'green', 'yellow'],
+      trial: 0,
+
+      randomStep: function() {
+        this.steps = [];
+        var steps = this.count;
+        for (var i = 0; i < steps; i++) {
+          var randomNum = Math.floor(Math.random() * steps);
+          this.steps.push(this.buttons[randomNum]);
+          // console.log(this.buttons[randomNum]);
+          // document.getElementById(this.buttons[randomNum]).style.backgroundColor = 'white';
+          // document.getElementById(this.buttons[randomNum]).style.backgroundColor = this.buttons[randomNum];
+        }
+      }
+    };
+
+
+
+    var view = {
+      displayGameBoard: function() {
+
+      },
+      displayCount: function() {
+        document.getElementById('count').innerHTML = 'step: ' + model.count;
+      },
+      displaySteps: function() {
+        controller.disablePress();
+        for (var i = 0; i < model.steps.length; i++) {
+          // this.displayGlint(model.steps[i]);
+          document.getElementById(model.steps[i]).style.backgroundColor = 'white';
+          document.getElementById(model.steps[i]).style.backgroundColor = model.steps[i];
+        }
+        controller.enablePress();
+      },
+      displayWrongPress: function(e) {
+        e.target.style.backgroundColor = 'white';
+      },
+
+      displayVictory: function() {
+        // all buttons blnkin~~
+      },
+
+      displayGlint: function(button) {
+        document.getElementById(button.target.id).style.backgroundColor = 'white';
+        controller.checkAnswer(button.target.id);
+      }
+
+    };
+
+    var controller = {
+      start: function() {
+        if (model.count <= 20) {
+          model.randomStep();
+          view.displaySteps();
+        } else {
+          // display VICTORY!!!
+        }
+      },
+      enablePress: function(e) {
+        var buttons = document.getElementsByClassName('button');
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].onclick = view.displayGlint;
+        }
+      },
+      disablePress: function() {
+        var buttons = document.getElementsByClassName('button');
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].onclick = null;
+        }
+      },
+
+      checkAnswer: function(button) {
+        if (model.steps[model.trial] !== button) {
+          this.disablePress();
+          document.getElementById(button).style.backgroundColor = 'black'; //display WRONG!
+          view.displaySteps();
+        } else {
+          if (model.trial == model.steps.length - 1) {
+            // display SUCCESS!
+            model.count++;
+            this.start();
+
+          }
+        }
+        model.trial++;
+      }
+    };
+
+
+    view.displayCount();
+    document.getElementById('start').onclick = controller.start;
+  </script>
+</body>
+
+</html>
