@@ -1,0 +1,40 @@
+$skin-color: #fda2bd;
+
+.day6 {
+    width: 350px;
+    height: 350px;
+    background-color: $skin-color;
+}
+
+.face {
+    width: 250px;
+    height: 300px;
+    margin: 0px auto;
+    position: relative;
+    top: 30px;
+    border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+    background-color: rgba(256, 256, 256, 0.5);
+    box-shadow: 
+        1px 1px 0px #fff,
+        -1px -1px 0px #fff,
+        1px -1px 0px #fff,
+        -1px 1px 0px #fff;
+}
+
+.circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: $skin-color;
+    position: absolute;
+}
+
+.circle:first-child {
+    @extend .circle;
+    transform: translate(200px, 100px);
+}
+
+.circle:last-child {
+    @extend .circle;
+    transform: translate(400px, 100px);
+}

@@ -1,0 +1,62 @@
+@keyframes snow-trunk{
+    from {border-left-color:  transparent; }
+    to   {border-left-color: #fff;}
+}
+
+@keyframes snowing{
+    from {top:  -10px; }
+    to   {top:-340px;}
+}
+
+@mixin trunk-features(
+      $edge-width:3px, 
+      $height:20px, 
+      $trunk-width:2px, 
+      $degree: 30, 
+      $top:0, 
+      $left:0, 
+      $flip:1)
+{
+        width: $edge-width;
+        border-bottom: $height solid $trunk-color;
+        border-left: $trunk-width solid transparent;
+        border-right: $trunk-width solid transparent;
+        transform-origin: 0% 100%;
+        transform: rotate(#{$degree}deg);
+        position: absolute;
+        top: $top;
+        left: $left;
+        animation: snow-trunk $animation-duration linear 0s 5 alternate;
+        animation-fill-mode: forwards;
+        
+}
+
+%big-snow {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: rgba(256, 256, 256, 1);
+    box-shadow:
+        2px 2px 5px #fff, 
+        -2px -2px 5px #fff, 
+        -2px 2px 5px #fff, 
+        2px -2px 5px #fff;
+    position: absolute;
+    top: -10px;
+    animation: snowing 5s linear 0s 5 alternate;
+}
+
+%small-snow {
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    background-color: rgba(256, 256, 256, 1);
+    box-shadow:
+        5px 5px 8px #fff, 
+        -5px -5px 8px #fff, 
+        -5px 5px 8px #fff, 
+        5px -5px 8px #fff;
+    position: absolute;
+    top: -10px;
+    animation: snowing 5s linear 0s 5 alternate;
+}

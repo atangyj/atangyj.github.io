@@ -1,0 +1,91 @@
+$total-leaf: 11;
+%leaf-features {
+    width: 40px;
+    height: 340px;
+    background: 
+        linear-gradient(to right,
+            rgba(244, 236, 181, 0.7),
+            rgba(244, 236, 181, 0.7));
+    
+    position: absolute;
+    top: 10px;
+    animation: leaf-rotation 10s ease 0s 1 normal;
+    animation-fill-mode: both;
+    
+}
+
+.day4 {
+    width: 350px;
+    height: 350px;
+    background: #92d4ee;
+    position: relative;
+    animation: sky-color 10s ease 0s 1 normal;
+    animation-fill-mode: both;
+}
+
+.ceiling {
+    width: 350px;
+    height: 12px;
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+}
+
+
+@for $i from 1 through $total-leaf {
+    .leaf:nth-child(#{$i}){
+    left: -30px + $i*30px;  
+    }
+}
+
+.leaf {
+    @extend %leaf-features;
+}
+
+
+@keyframes sky-color {
+    0% {background: #92d4ee;}
+    25% {background: #92d4ee;}
+    75% {background: #124683;}
+    100% {background: #124683;}
+}
+
+@keyframes leaf-rotation {
+    0% {
+        transform: skewY(0deg);
+        background: 
+        linear-gradient(to right,
+            rgba(244, 236, 181, 0.7),
+            rgba(244, 236, 181, 0.7));
+    }
+    
+    25% {
+        transform: skewY(60deg);
+        background: 
+        linear-gradient(to right,
+            rgba(249, 242, 192, 1) 60%,
+            rgba(244, 236, 181, 0.5) 40%);
+        width: 10px;      
+    }
+    
+    75% {
+        transform: skewY(60deg);
+        background: 
+        linear-gradient(to right,
+            rgba(244, 236, 181, 0.5) 60%,
+            rgba(249, 242, 192, 1) 40%);
+        width: 10px;      
+    }
+    
+    100% {
+        transform: skewY(0deg);
+        background: 
+        linear-gradient(to right,
+             rgba(244, 236, 181, 0.7),
+            rgba(244, 236, 181, 0.7));
+        
+    }
+    
+}

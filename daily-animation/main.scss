@@ -1,0 +1,45 @@
+@import "./SCSS/mixin.scss";
+@import "./SCSS/variables";
+
+/***
+@mixin trunk-features(
+$edge-width:3px, 
+$height:20px, 
+$trunk-width:2px, 
+$degree: 30, 
+$top:0, 
+$left:0, 
+$flip:1)
+***/
+
+body {
+    background-color: royalblue;
+}
+
+.trunk {
+    @include trunk-features(5px, 250px, 5px, 0, 0, 100px,1);
+    animation: none;
+}
+.trunk:nth-child(2) {
+    @include trunk-features(2px, 100px, 2px, 30, 0, 100px,1);
+}
+
+.trunk:nth-child(3) {
+    @include trunk-features(2px, 100px, 2px, 45, 100px, 100px,1);
+}
+
+.trunk:nth-child(4) {
+    @include trunk-features(2px, 100px, 2px, -30, 0, 100px,1);
+}
+
+.trunk:nth-child(5) {
+    @include trunk-features(2px, 100px, 2px, -45, 100px, 100px,1);
+}
+
+.snow:nth-child(2){
+    @extend %big-snow;
+}
+
+.snow:nth-child(3){
+    @extend %small-snow;
+}
