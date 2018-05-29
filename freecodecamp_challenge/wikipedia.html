@@ -1,29 +1,176 @@
 <!DOCTYPE html>
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <head>
   <title>Wikipedia</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <style>
-    a:link {
-      text-decoration: none;
+    @import url('https://fonts.googleapis.com/css?family=PT+Serif:400,700');
+
+
+    * {
+      padding: 0;
+      margin: 0;
+      border: 0;
+      font-family: 'PT Serif', sans-serif;
+    }
+
+    body {
+      background: #fee9d6;
+    }
+
+    a {
+      padding: 1.5em;
+      background: #fff;
+    }
+
+    .explore {
+      display: block;
+      width: 1000px;
+      ;
+      text-align: left;
+      font-size: 8em;
+      text-decoration: underline;
+      background: #fee9d6;
       color: #000;
+      font-weight: bold;
+    }
+
+    .searchbar {
+      width: 1000px;
+      margin: auto;
 
     }
 
-    a>div {
-      border: 1px solid grey;
+    .searchbox {
+      background: #fee9d6;
+      float: left;
+      width: 80%;
+      border-bottom: 1px solid #000;
+      font-size: 2em;
+      color: #000;
+    }
+
+    input:focus {
+      background: #fee9d6;
+    }
+
+    #search-button {
+      background: #fee9d6;
+      color: #000;
+      float: left;
+      width: 20%;
+      border-bottom: 1px solid #000;
+      text-align: right;
+      font-size: 2em;
+
+
+    }
+
+    #search-button:hover {
+      cursor: pointer;
+    }
+
+
+
+
+    #result-container {
+      /* column-width: 300px; */
+      column-count: 3;
+      column-gap: 50px;
+      width: 1000px;
+      ;
+      margin: auto;
+      padding-top: 100px;
+
+    }
+
+    #result-container>a {
+      display: block;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      /* border-radius: 5px; */
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      margin-bottom: 50px;
+
+    }
+
+    .image {
+      background-repeat: no-repeat;
+    }
+
+    .image+div {
+      background: #fff;
+      padding: 1.3em .9em 1.3em .9em;
+
+    }
+
+    h5 {
+      font-size: 1.5em;
+      margin-bottom: 0.4em;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 1em;
+      color: rgb(56, 56, 56);
+    }
+
+
+    a:link {
+      text-decoration: none;
+      color: #000;
+    }
+
+    /* a: visited {
+      color: pink;
+    } */
+
+    @media screen and (max-width: 768px) {
+      .searchbar {
+        width: 1000px;
+        ;
+      }
+
+      .explore {
+        width: 250px;
+        font-size: 4em;
+        margin: 25px;
+      }
+
+      #result-container {
+        width: 1000px;
+        ;
+        column-count: 1;
+        /* The width is 100%, when the viewport is 800px or smaller */
+      }
     }
   </style>
 </head>
 
 <body>
-  <input type="text" name="search" id="query">
-  <input type="submit" value="Submit" id="search-button">
-  <a href="https://en.wikipedia.org/wiki/Special:Random" , target="_blank">Something new</a>
+  <a href="https://en.wikipedia.org/wiki/Special:Random" , target="_blank" class="explore">EXPLORE<span style="color:blue">!</span></a>
+  <div class="searchbar">
+    <input type="text" name="search" id="query" autofocus onfocus="this.value=''" class="searchbox">
+    <button type="submit" id="search-button">Search</button>
+  </div>
+
+
   <div id='result-container'></div>
 
   <script>
-    document.getElementById('search-button').onclick = getSearchResults;
+    window.onload = function() {
+      var searchbtn = document.getElementById('search-button');
+      searchbtn.onclick = getSearchResults;
+      document.getElementById('query').addEventListener('keyup', function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+          searchbtn.click();
+        }
+      })
+    }
 
     function getQuery() {
       return document.getElementById('query').value;
@@ -31,8 +178,8 @@
 
     function getSearchResults() {
       var query = getQuery();
-      var url = 'https://en.wikipedia.org/w/api.php?action=query&formatversion=2&generator=prefixsearch&gpssearch=' + query +
-        '&gpslimit=10&prop=info|pageterms&inprop=url&wbptterms=description&format=json&formatversion=2&origin=*';
+      var url = 'https://en.wikipedia.org/w/api.php?action=query&generator=prefixsearch&gpssearch=' + query +
+        '&gpslimit=10&prop=info|pageterms|pageimages&inprop=url&wbptterms=description&piprop=thumbnail&pithumbsize=300&format=json&formatversion=2&origin=*';
       request = new XMLHttpRequest;
       request.onload = function() {
         if (request.status == 200) {
@@ -43,20 +190,38 @@
 
         }
       };
+
       request.open('GET', url);
       request.send(null);
 
       function displaySearchResult(results) {
+        document.getElementById('query').blur();
+        var div = document.getElementById('result-container');
+
+        while (div.firstChild) {
+          div.removeChild(div.firstChild);
+        }
+
         var pages = results.query.pages;
 
         for (var i = 0; i < pages.length; i++) {
           var link = document.createElement('a');
+
           var attrLink = document.createAttribute('href');
           var attrTarget = document.createAttribute('target');
+          // var div = document.createElement('div');
+          // link.appendChild(div);
           attrLink.value = pages[i].canonicalurl;
           attrTarget.value = '_blank';
           link.setAttributeNode(attrLink);
           link.setAttributeNode(attrTarget);
+          var imagediv = document.createElement('div');
+          var attrImage = document.createAttribute('class');
+          attrImage.value = 'image';
+          imagediv.setAttributeNode(attrImage);
+          link.appendChild(imagediv);
+
+
           var listView = document.createElement('div');
           link.appendChild(listView);
           document.getElementById('result-container').appendChild(link);
@@ -65,6 +230,13 @@
           title.appendChild(titleText);
           listView.appendChild(title);
 
+          if (pages[i].hasOwnProperty('thumbnail')) {
+            var imageContainer = document.getElementsByClassName('image');
+            // imageContainer[i].style.width = "300px";
+            imageContainer[i].style.height = pages[i].thumbnail.height + "px";
+            imageContainer[i].style.backgroundImage = 'url(' + pages[i].thumbnail.source + ')';
+            imageContainer[i].style.backgroundSize = "300px " + pages[i].thumbnail.height + "px";
+          }
           if (pages[i].hasOwnProperty('terms')) {
 
             var description = document.createElement('p');
@@ -72,8 +244,9 @@
             description.appendChild(descText);
             listView.appendChild(description);
           }
-
         }
+
+
       }
 
     }
