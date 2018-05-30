@@ -3,6 +3,27 @@
 
 <head>
   <title>Twitch</title>
+  <style>
+    #user-container div::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:visited {
+      color: #000;
+    }
+
+    img {
+      float: left;
+      border-radius: 50%;
+
+    }
+  </style>
 </head>
 
 <body>
@@ -65,7 +86,7 @@
           document.getElementsByClassName('displayName')[i].innerHTML = usersInfo.data[i].display_name;
           document.getElementsByClassName('displayName')[i].setAttribute('id', usersInfo.data[i].id);
           var img = document.createElement('img');
-          document.getElementsByClassName('displayName')[i].parentNode.appendChild(img);
+          document.getElementsByClassName('displayName')[i].insertAdjacentElement('beforebegin', img);
           document.getElementsByTagName('img')[i].setAttribute('src', usersInfo.data[i].profile_image_url);
 
 
