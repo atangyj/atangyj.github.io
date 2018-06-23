@@ -1,0 +1,13 @@
+* {
+  outline: 1px dashed blue;
+}
+
+#countdown-container:hover {
+  cursor: pointer;
+}
+
+.column {
+  width: 300px;
+  height: 300px;
+  float: left;
+}

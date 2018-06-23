@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <title>TODODORO</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
+    * {
+      border: 0;
+      padding: 0;
+      margin: 0;
+      color: rgb(118, 30, 214);
+      font-family: 'Roboto', sans-serif;
+
+      outline: 1px dashed gray;
+    }
+
+    body {
+      background-color: rgb(254, 228, 221);
+
+    }
+
+    .container {
+      width: 800px;
+      height: 500px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      line-height: 50px;
+      border: 2px solid rgb(118, 30, 214);
+      font-size: 32px;
+
+    }
+
+    .add {
+      float: right;
+      line-height: 50px;
+    }
+
+    .left {
+      width: 56%;
+
+    }
+
+    .right {
+      width: 44%;
+
+    }
+
+
+    .add:hover,
+    .play:hover,
+    .pause:hover,
+    .interval:hover {
+      cursor: pointer;
+    }
+
+    .list {
+      overflow: auto;
+      border-bottom: 2px solid rgb(118, 30, 214);
+      border-left: 2px solid rgb(118, 30, 214);
+      border-right: 2px solid rgb(118, 30, 214);
+      padding: 10px 15px;
+      position: relative;
+
+    }
+
+    .column {
+      float: left;
+    }
+
+    .input-field {
+      display: block;
+      line-height: 38px;
+      font-size: 32px;
+      background-color: rgb(254, 228, 221);
+      margin-bottom: 10px;
+    }
+
+
+
+    .dot {
+      width: 25px;
+      height: 25px;
+      background: rgb(118, 30, 214);
+      border: 2px solid rgb(118, 30, 214);
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+      vertical-align: bottom;
+    }
+
+    .unchecked {
+      border: 2px solid rgb(118, 30, 214);
+      background-color: rgb(254, 228, 221);
+    }
+
+    .play,
+    .pause,
+    .breakIcon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 48px;
+
+    }
+
+    .interval {
+      position: absolute;
+      font-size: 48px;
+      right: 100px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .pause {
+      display: none;
+    }
+
+    .breakIcon {
+      display: none;
+    }
+
+    .parameter {
+      float: left;
+
+    }
+
+    .parameter input {
+      background-color: rgb(254, 228, 221);
+    }
+
+    .setting::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .setting {
+      border-bottom: 2px solid rgb(118, 30, 214);
+      border-left: 2px solid rgb(118, 30, 214);
+      border-right: 2px solid rgb(118, 30, 214);
+      padding: 10px 15px;
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- <div class="list">
+    <div class="left column">
+      <h1>what are you doing?</h1>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="right column">
+      <h2>00:00</h2>
+      <i class="icon">Arrow</i>
+    </div>
+  </div> -->
+  <div class="container">
+    <div class="header">
+      Task
+      <i class="material-icons add">add</i>
+    </div>
+    <div class="setting">
+      <div class="parameter">interval<input type="text" id="interval" value=""></div>
+      <div class="parameter">break<input type="text" id="break" value=""></div>
+      <div class="parameter">session<input type="text" id="session" value=""></div>
+      <input class="parameter" type="submit" id="done" value="Done">
+    </div>
+  </div>
+
+
+  <script>
+    const view = {
+      displayClock() {
+        const container = document.getElementsByClassName('container')[0],
+          list = document.createElement('div'),
+          listL = document.createElement('div'),
+          listR = document.createElement('div'),
+          listTitle = document.createElement('input'),
+          time = document.createElement('span'),
+          playIcon = document.createElement('i'),
+          pauseIcon = document.createElement('i'),
+          breakIcon = document.createElement('i');
+
+        container.appendChild(list);
+        list.appendChild(listL);
+        list.appendChild(listR);
+        listL.appendChild(listTitle);
+
+        for (i = 0; i < 4; i++) {
+          const dot = document.createElement('div');
+          listL.appendChild(dot);
+          dot.classList.add('dot', 'unchecked');
+        }
+
+        listR.appendChild(time);
+        listR.appendChild(playIcon);
+        listR.appendChild(pauseIcon);
+        listR.appendChild(breakIcon);
+
+        list.classList.add('list');
+        listL.classList.add('column', 'left');
+        listR.classList.add('column', 'right');
+        listTitle.setAttribute('type', 'text');
+        listTitle.setAttribute('value', 'what are you doing?');
+
+        time.classList.add('interval');
+        listL.classList.add('counter_' + model.counterNum);
+        listTitle.classList.add('input-field');
+        playIcon.classList.add('material-icons', 'play', 'counter_' + model.counterNum);
+        pauseIcon.classList.add('material-icons', 'pause', 'counter_' + model.counterNum);
+        breakIcon.classList.add('material-icons', 'coffeebreak', 'counter_' + model.counterNum);
+
+        playIcon.addEventListener('click', controller.runClock.bind(controller));
+        pauseIcon.addEventListener('click', controller.pauseClock.bind(controller));
+        time.addEventListener('click', this.displaySetting.bind(controller));
+
+        listTitle.innerHTML = model.clock[model.counterNum].title;
+        time.innerHTML = model.clock[model.counterNum].intervalLength;
+        playIcon.innerHTML = 'play_circle_outline';
+        pauseIcon.innerHTML = 'pause_circle_outline';
+        breakIcon.innerHTML = 'free_breakfast';
+
+        model.counterNum++;
+
+
+
+
+      },
+      displayCompleteSession(index) {
+        // console.log('counter_' + index);
+        document.querySelector('.counter_' + index + ' .unchecked').classList.remove('unchecked');
+
+      },
+
+      displaySetting(e) {
+
+        const index = Number(e.target.nextSibling.classList[2].substr(8));
+        document.getElementById('interval').value = model.clock[index].intervalLength;
+        document.getElementById('break').value = model.clock[index].breakLength;
+        document.getElementById('session').value = model.clock[index].session;
+        const done = document.getElementById('done');
+        if (typeof done.classList[0] === 'undefined') {
+          done.classList.add(index);
+        } else {
+          done.className = "";
+          done.classList.add(index);
+        }
+      },
+
+      displayIntervalLength(index) {
+        document.getElementsByClassName('counter_' + index)[1].previousSibling.innerHTML = model.clock[index].intervalLength;
+      },
+
+      displaySession() {
+        document.getElementsByClassName('session');
+
+      },
+
+      displayCountdown() {
+
+      }
+
+
+    };
+
+    const model = {
+      clock: [],
+      counterNum: 0
+    };
+
+    const controller = {
+      addClock() {
+        this.createClock();
+        view.displayClock();
+      },
+      createClock() {
+        const c = new Clock('what are you doing?', 4, 4, 5, 5 * 60, false);
+        model.clock.push(c);
+      },
+      runClock(e) {
+        // if (model.clock)
+        e.target.style.display = 'none';
+        e.target.nextSibling.style.display = 'inline-block';
+
+        const indexCounter = Number(e.target.classList[2].substr(8));
+        console.log(e.target.classList);
+        model.clock[indexCounter].isCountdown = !model.clock[indexCounter].isCountdown;
+        const timer = setInterval(countdown, 1000);
+
+        function countdown() {
+          if (model.clock[indexCounter].isCountdown) {
+            if (model.clock[indexCounter].intervalLength <= 0) {
+              clearInterval(timer);
+              this.setBreakLength(indexCounter);
+              view.displayCompleteSession(indexCounter);
+
+            } else {
+              model.clock[indexCounter].intervalLength--;
+              e.target.previousSibling.innerHTML = model.clock[indexCounter].intervalLength;
+              if (model.clock[indexCounter].intervalLength == 0) {
+                e.target.nextSibling.style.display = 'none';
+                e.target.style.display = 'inline-block';
+              }
+            }
+          } else {
+
+            clearInterval(timer);
+          }
+        }
+      },
+
+      pauseClock(e) {
+        e.target.style.display = 'none';
+        e.target.previousSibling.style.display = 'inline-block';
+        const indexCounter = Number(e.target.classList[1].substr(8));
+        model.clock[indexCounter].isCountdown = !model.clock[indexCounter].isCountdown;
+      },
+
+      submitSetting(e) {
+        const index = Number(e.target.className);
+        model.clock[index].intervalLength = document.getElementById('interval').value;
+        model.clock[index].breakLength = document.getElementById('break').value;
+        model.clock[index].session = document.getElementById('session').value;
+        view.displayIntervalLength(index);
+
+      },
+
+      takeBreak(e) {
+
+      }
+    };
+
+    function Clock(title, session, remainSession, intervalLength, breakLength, isCountdown) {
+      this.title = title;
+      this.session = session;
+      this.intervalLength = intervalLength;
+      this.breakLength = breakLength;
+      this.isCountdown = isCountdown;
+    }
+
+    document.getElementsByClassName('add')[0].onclick = controller.addClock.bind(controller);
+    document.getElementById('done').onclick = controller.submitSetting.bind(controller);
+    // document.getElementsByClassName('play')[0].onclick = controller.startClock.bind(controller);
+  </script>
+</body>
+
+</html>
