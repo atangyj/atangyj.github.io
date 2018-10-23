@@ -3,7 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import {RandomButton} from './RandomButton.js';
 import {TweetButton} from './TweetButton.js';
-import profile from './mucha_hamlet.jpg';
+import hamlet from './mucha_hamlet.jpg';
+import richard3 from './richardthird.jpg';
+import othello from './othello.jpg';
+import macbeth from './macbeth.jpg';
+import kinglear from './kinglear.jpg';
+import bgImage from './Shakespeare.jpg';
+
+const bgImageStyle = {
+  position: 'fixed',
+  width: '100%',
+  height: '100vh',
+  backgroundImage: `url(${bgImage})`,
+  backgroundPosition: 'center',
+  backgroundImageRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  // outline: '1px solid blue'
+
+}
 
 class RandomQuote extends React.Component {
   constructor(props){
@@ -11,7 +28,7 @@ class RandomQuote extends React.Component {
     this.state = {
       quote: "Be not afraid of greatness",
       author:"William Shakespeare",
-      photo: profile
+      photo: hamlet
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -19,37 +36,36 @@ class RandomQuote extends React.Component {
   }
 
 
-
   chooseQuote(){
     const quotes = [
       {quote: 'To be, or not to be: that is the question',
       author: 'Hamlet',
-      photo: 'src'
+      photo: hamlet
       },
 
       {quote: 'Now is the winter of our discontent',
       author: 'Richard III',
-      photo: 'src'
+      photo: richard3
       },
 
       {quote: 'Is this a dagger which I see before me, the handle toward my hand?',
       author: 'Macbeth',
-      photo: 'src'
+      photo: macbeth
       },
 
       {quote: 'How sharper than a serpent’s tooth it is to have a thankless child!',
       author: 'King Lear',
-      photo: 'src'
+      photo: kinglear
       },
 
       {quote: 'I am one who loved not wisely but too well.',
       author: 'Othello',
-      photo: 'src'
+      photo: othello
       }
     ]
 
 
-    return quotes[Math.floor(Math.random()*quotes.length)];
+    return quotes[Math.floor(Math.random()*quotes.length)].author === this.state.author? this.chooseQuote(): quotes[Math.floor(Math.random()*quotes.length)];
   }
 
   handleTweet(){
@@ -63,18 +79,23 @@ class RandomQuote extends React.Component {
     this.setState({
       quote: newQuote.quote,
       author: newQuote.author,
+      photo: newQuote.photo
       })
   }
 
   render(){
     return (
-      <div className="container">
-        <img className="avatar" src= {this.state.photo} alt="" />
-        <p className="author">{this.state.author}</p>
-        <p className="quote">{this.state.quote}</p>
+      <div id="container" style = {bgImageStyle}>
+        <div id="quote-box">
+          <div className="image-cropper">
+            <img className="avatar" src= {this.state.photo} alt="" />
+          </div>
+          <p className="author">{this.state.author}</p>
+          <p className="quote">{this.state.quote}</p>
 
-        <TweetButton onClick = {this.handleTweet}/ >
-        <RandomButton onClick = {this.handleClick} />
+          <TweetButton onClick = {this.handleTweet}/ >
+          <RandomButton onClick = {this.handleClick} />
+        </div>
       </div>
     );
   }
