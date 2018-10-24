@@ -106,8 +106,11 @@ class DrumPad extends React.Component {
 
     handleClick(){
       if(this.props.isBankOne){
+        this.bankOneRef.current.volume = this.props.volume;
         this.bankOneRef.current.play();
+        console.log(this);
       } else {
+        this.bankTwoRef.current.volume = this.props.volume;
         this.bankTwoRef.current.play();
       }
 
@@ -130,6 +133,22 @@ class DrumPad extends React.Component {
     }
 }
 
+
+function VolumeControl(props){
+  return(
+    <input type="range" min="0" max="1" step=".1" onInput={props.handleScroll}/>
+  )
+}
+
+function TurnOff(props){
+  return(
+    <label className="switch" >
+      <input type="checkbox" onChange={props.onToggle}/>
+      <span className="slider round">meow</span>
+    </label>
+  )
+}
+
 const bank_one = soundBank.map(sound => sound.bank_one);
 const bank_two = soundBank.map(sound => sound.bank_two);
 
@@ -139,9 +158,13 @@ class Drum extends React.Component {
     this.state = {
       bank_1: bank_one,
       bank_2: bank_two,
-      isBankOne: true
+      isBankOne: true,
+      volume: 1,
+      volumnOff: false
     }
     this.switchBank = this.switchBank.bind(this);
+    this.constrolVolume = this.constrolVolume.bind(this);
+    this.offVolume = this.offVolume.bind(this);
   }
 
   switchBank(){
@@ -150,9 +173,17 @@ class Drum extends React.Component {
 
   }
 
+  constrolVolume(e){
+    this.setState({volume: Number(e.target.value)});
+  }
+
+  offVolume(e){
+    console.log(e.target);
+  }
+
   renderDrumPad(i){
     return (
-      <DrumPad bank_1={this.state.bank_1[i]} bank_2={this.state.bank_2[i]} isBankOne={this.state.isBankOne} clip={soundBank[i].sound}/>
+      <DrumPad bank_1={this.state.bank_1[i]} bank_2={this.state.bank_2[i]} isBankOne={this.state.isBankOne} clip={soundBank[i].sound} volume={this.state.volume}/>
     )
   }
 
@@ -169,6 +200,9 @@ class Drum extends React.Component {
         {this.renderDrumPad(7)}
         {this.renderDrumPad(8)}
         <BankControl onClick = {this.switchBank} />
+        <VolumeControl handleScroll = {this.constrolVolume} />
+        <TurnOff onToggle = {this.OffVolume}/>
+
       </div>
     )
   }
