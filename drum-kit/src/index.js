@@ -106,11 +106,11 @@ class DrumPad extends React.Component {
 
     handleClick(){
       if(this.props.isBankOne){
-        this.bankOneRef.current.volume = this.props.volume;
+        this.bankOneRef.current.volume = this.props.vOff? 0: this.props.volume;
         this.bankOneRef.current.play();
         console.log(this);
       } else {
-        this.bankTwoRef.current.volume = this.props.volume;
+        this.bankTwoRef.current.volume = this.props.vOff? 0: this.props.volume;
         this.bankTwoRef.current.play();
       }
 
@@ -144,7 +144,7 @@ function TurnOff(props){
   return(
     <label className="switch" >
       <input type="checkbox" onChange={props.onToggle}/>
-      <span className="slider round">meow</span>
+      <span className="slider round"></span>
     </label>
   )
 }
@@ -160,7 +160,7 @@ class Drum extends React.Component {
       bank_2: bank_two,
       isBankOne: true,
       volume: 1,
-      volumnOff: false
+      volumeOff: false
     }
     this.switchBank = this.switchBank.bind(this);
     this.constrolVolume = this.constrolVolume.bind(this);
@@ -178,12 +178,12 @@ class Drum extends React.Component {
   }
 
   offVolume(e){
-    console.log(e.target);
+    this.setState({volumeOff: !this.state.volumeOff});
   }
 
   renderDrumPad(i){
     return (
-      <DrumPad bank_1={this.state.bank_1[i]} bank_2={this.state.bank_2[i]} isBankOne={this.state.isBankOne} clip={soundBank[i].sound} volume={this.state.volume}/>
+      <DrumPad className="drum-pad" bank_1={this.state.bank_1[i]} bank_2={this.state.bank_2[i]} isBankOne={this.state.isBankOne} clip={soundBank[i].sound} volume={this.state.volume} vOff={this.state.volumeOff}/>
     )
   }
 
@@ -201,7 +201,7 @@ class Drum extends React.Component {
         {this.renderDrumPad(8)}
         <BankControl onClick = {this.switchBank} />
         <VolumeControl handleScroll = {this.constrolVolume} />
-        <TurnOff onToggle = {this.OffVolume}/>
+        <TurnOff onToggle = {this.offVolume}/>
 
       </div>
     )
