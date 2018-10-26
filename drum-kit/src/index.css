@@ -74,3 +74,9 @@ input:checked+.slider:before {
 .slider .round:before {
   border-radius: 50%;
 }
+
+/* LAYOUT */
+
+* {
+  outline: 1px solid grey;
+}

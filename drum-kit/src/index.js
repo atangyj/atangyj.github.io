@@ -88,6 +88,14 @@ const soundBank = [
 
 ];
 
+class SoundDescription extends React.Component {
+  render(){
+    return(
+      <p>{this.props.soundName}</p>
+    )
+  }
+}
+
 class BankControl extends React.Component {
   render(){
     return(
@@ -97,40 +105,16 @@ class BankControl extends React.Component {
 }
 
 class DrumPad extends React.Component {
-    constructor(props){
-      super(props);
-      this.bankOneRef = React.createRef();
-      this.bankTwoRef = React.createRef();
-      this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick(){
-      if(this.props.isBankOne){
-        this.bankOneRef.current.volume = this.props.vOff? 0: this.props.volume;
-        this.bankOneRef.current.play();
-        console.log(this);
-      } else {
-        this.bankTwoRef.current.volume = this.props.vOff? 0: this.props.volume;
-        this.bankTwoRef.current.play();
-      }
-
-    }
-
-    render(){
-      return(
-        <div onClick={this.handleClick} >
-          <span>{this.props.clip}</span>
-
-          <audio ref={this.bankOneRef} >
-            <source src={this.props.bank_1} type="audio/wav" />
-          </audio>
-
-          <audio ref={this.bankTwoRef} >
-            <source src={this.props.bank_2} type="audio/wav" />
-          </audio>
-        </div>
-      )
-    }
+  render(){
+    return(
+      <div onClick={this.props.onClick}>
+        <span>{this.props.clip}</span>
+        <audio ref={this.props.soundRef}>
+          <source src={this.props.source} type="audio/wav" />
+        </audio>
+      </div>
+    )
+  }
 }
 
 
@@ -156,21 +140,31 @@ class Drum extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      bank_1: bank_one,
-      bank_2: bank_two,
+      bank: bank_one,
       isBankOne: true,
+      sound: null,
       volume: 1,
       volumeOff: false
     }
+    this.Ref = React.createRef();
+
+    this.handleClick = this.handleClick.bind(this);
     this.switchBank = this.switchBank.bind(this);
     this.constrolVolume = this.constrolVolume.bind(this);
     this.offVolume = this.offVolume.bind(this);
   }
 
+  handleClick(i){
+    // this.Ref.current.volume = this.state.volume;
+    this.Ref.current.load();
+    this.Ref.current.play();
+    console.log(this.Ref.current)
+  }
+
   switchBank(){
     this.setState({
+      bank: this.state.isBankOne? bank_two: bank_one,
       isBankOne: !this.state.isBankOne});
-
   }
 
   constrolVolume(e){
@@ -183,26 +177,30 @@ class Drum extends React.Component {
 
   renderDrumPad(i){
     return (
-      <DrumPad className="drum-pad" bank_1={this.state.bank_1[i]} bank_2={this.state.bank_2[i]} isBankOne={this.state.isBankOne} clip={soundBank[i].sound} volume={this.state.volume} vOff={this.state.volumeOff}/>
+      <DrumPad soundRef={this.Ref} source={this.state.bank[i]} onClick={this.handleClick} clip={soundBank[i].key} />
     )
   }
 
   render(){
     return(
-      <div>
-        {this.renderDrumPad(0)}
-        {this.renderDrumPad(1)}
-        {this.renderDrumPad(2)}
-        {this.renderDrumPad(3)}
-        {this.renderDrumPad(4)}
-        {this.renderDrumPad(5)}
-        {this.renderDrumPad(6)}
-        {this.renderDrumPad(7)}
-        {this.renderDrumPad(8)}
-        <BankControl onClick = {this.switchBank} />
-        <VolumeControl handleScroll = {this.constrolVolume} />
-        <TurnOff onToggle = {this.offVolume}/>
-
+      <div className="container-main">
+        <div className="container-left">
+          {this.renderDrumPad(0)}
+          {this.renderDrumPad(1)}
+          {this.renderDrumPad(2)}
+          {this.renderDrumPad(3)}
+          {this.renderDrumPad(4)}
+          {this.renderDrumPad(5)}
+          {this.renderDrumPad(6)}
+          {this.renderDrumPad(7)}
+          {this.renderDrumPad(8)}
+        </div>
+        <div className="container-right">
+          <SoundDescription soundName = {this.state.sound}/>
+          <BankControl onClick = {this.switchBank} />
+          <VolumeControl handleScroll = {this.constrolVolume} />
+          <TurnOff onToggle = {this.offVolume}/>
+        </div>
       </div>
     )
   }
