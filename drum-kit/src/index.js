@@ -88,31 +88,14 @@ const soundBank = [
 
 ];
 
-class SoundDescription extends React.Component {
-  render(){
-    return(
-      <p>{this.props.soundName}</p>
-    )
-  }
-}
 
-class BankControl extends React.Component {
-  render(){
-    return(
-      <button onClick={this.props.onClick}>Bank Switcher</button>
-    )
-  }
-}
+const bank_one = soundBank.map(sound => sound.bank_one);
+const bank_two = soundBank.map(sound => sound.bank_two);
 
 class DrumPad extends React.Component {
   render(){
     return(
-      <div onClick={this.props.onClick}>
-        <span>{this.props.clip}</span>
-        <audio ref={this.props.soundRef}>
-          <source src={this.props.source} type="audio/wav" />
-        </audio>
-      </div>
+      <span data-key={this.props.idx} onClick={this.props.onClick}>{this.props.keyname}</span>
     )
   }
 }
@@ -120,86 +103,104 @@ class DrumPad extends React.Component {
 
 function VolumeControl(props){
   return(
-    <input type="range" min="0" max="1" step=".1" onInput={props.handleScroll}/>
+    <div onChange={props.onChange}>
+      <input type="range" min="0" max="1" step="0.1"/>
+    </div>
   )
 }
 
-function TurnOff(props){
+function TurnOffVolume(props){
   return(
-    <label className="switch" >
-      <input type="checkbox" onChange={props.onToggle}/>
-      <span className="slider round"></span>
-    </label>
+    <div>
+      <label className="switch" onClick={props.onClick}>
+        <input type="checkbox"/>
+        <span className="slider round"></span>
+      </label>
+    </div>
   )
 }
 
-const bank_one = soundBank.map(sound => sound.bank_one);
-const bank_two = soundBank.map(sound => sound.bank_two);
 
 class Drum extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      bank: bank_one,
+      display: null,
+      source: null,
       isBankOne: true,
-      sound: null,
       volume: 1,
-      volumeOff: false
+      isOn: true,
     }
-    this.Ref = React.createRef();
 
-    this.handleClick = this.handleClick.bind(this);
+    this.Ref = React.createRef();
+    this.pressPad = this.pressPad.bind(this);
+    this.setSource = this.setSource.bind(this);
+    this.playSound = this.playSound.bind(this);
     this.switchBank = this.switchBank.bind(this);
-    this.constrolVolume = this.constrolVolume.bind(this);
-    this.offVolume = this.offVolume.bind(this);
+    this.controlVolume = this.controlVolume.bind(this);
+    this.turnOffVolume = this.turnOffVolume.bind(this);
   }
 
-  handleClick(i){
-    // this.Ref.current.volume = this.state.volume;
+  pressPad(e){
+    this.setSource(e);
+    this.playSound();
+  }
+
+  setSource(e){
+    if(this.state.isBankOne){
+      this.setState({
+        source: bank_one[Number(e.target.getAttribute('data-key'))]
+      })
+    } else {
+      this.setState({
+        source: bank_two[Number(e.target.getAttribute('data-key'))]
+      })
+    }
+  }
+
+  playSound(){
+    this.Ref.current.volume = this.state.volume;
     this.Ref.current.load();
     this.Ref.current.play();
-    console.log(this.Ref.current)
   }
 
   switchBank(){
-    this.setState({
-      bank: this.state.isBankOne? bank_two: bank_one,
-      isBankOne: !this.state.isBankOne});
+    this.setState({isBankOne: !this.state.isBankOne});
   }
 
-  constrolVolume(e){
+  controlVolume(e){
     this.setState({volume: Number(e.target.value)});
   }
 
-  offVolume(e){
-    this.setState({volumeOff: !this.state.volumeOff});
-  }
-
-  renderDrumPad(i){
-    return (
-      <DrumPad soundRef={this.Ref} source={this.state.bank[i]} onClick={this.handleClick} clip={soundBank[i].key} />
-    )
+  turnOffVolume(){
+    this.setState({
+      volume: 0,
+      isOn: !this.state.isOn
+    })
   }
 
   render(){
     return(
       <div className="container-main">
-        <div className="container-left">
-          {this.renderDrumPad(0)}
-          {this.renderDrumPad(1)}
-          {this.renderDrumPad(2)}
-          {this.renderDrumPad(3)}
-          {this.renderDrumPad(4)}
-          {this.renderDrumPad(5)}
-          {this.renderDrumPad(6)}
-          {this.renderDrumPad(7)}
-          {this.renderDrumPad(8)}
+        <div className="container-display">
+          <p>{this.state.display}</p>
         </div>
-        <div className="container-right">
-          <SoundDescription soundName = {this.state.sound}/>
-          <BankControl onClick = {this.switchBank} />
-          <VolumeControl handleScroll = {this.constrolVolume} />
-          <TurnOff onToggle = {this.offVolume}/>
+
+        <div className="container-drum-pads">
+          <DrumPad idx="0" keyname={soundBank[0].key} onClick={this.pressPad}/>
+          <DrumPad idx="1" keyname={soundBank[1].key} onClick={this.pressPad}/>
+
+          <audio ref={this.Ref}>
+            <source src={this.state.source} type="audio/wav" />
+          </audio>
+        </div>
+
+        <div className="container-settings">
+          <button type="button" onClick={this.switchBank}>Bank 1</button>
+          <button type="button" onClick={this.switchBank}>Bank 2</button>
+
+          <VolumeControl onChange = {this.controlVolume} />
+          <TurnOffVolume onClick = {this.turnOffVolume} />
         </div>
       </div>
     )
