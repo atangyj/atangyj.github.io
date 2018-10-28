@@ -219,7 +219,7 @@ class Drum extends React.Component {
   }
 
   handleKeyPress(e){
-    if(soundBank.filter(ele=> {return ele.keyCode == e.keyCode})){
+    if(soundBank.filter(ele=> {return ele.keyCode == e.keyCode}).length==1){
       const src = soundBank.filter(ele=> {return ele.keyCode == e.keyCode})[0];
 
       if(this.state.isBankOne){
@@ -227,9 +227,12 @@ class Drum extends React.Component {
       } else {
         this.setState({source: src.bank_one});
       }
+
+      this.playSound();
+      this.setState({display: src.sound});
     }
 
-    this.playSound();
+
   }
 
   componentDidMount(){
