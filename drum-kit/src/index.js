@@ -219,11 +219,21 @@ class Drum extends React.Component {
   }
 
   handleKeyPress(e){
-    console.log(e);
+    if(soundBank.filter(ele=> {return ele.keyCode == e.keyCode})){
+      const src = soundBank.filter(ele=> {return ele.keyCode == e.keyCode})[0];
+
+      if(this.state.isBankOne){
+        this.setState({source: src.bank_one});
+      } else {
+        this.setState({source: src.bank_one});
+      }
+    }
+
+    this.playSound();
   }
 
   componentDidMount(){
-    window.onKeyDown = this.handleKeyPress;
+    window.onkeydown = this.handleKeyPress;
   }
 
   render(){
