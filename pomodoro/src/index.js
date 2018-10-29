@@ -8,6 +8,7 @@ const defaultSetting = {
 };
 
 
+
 function SessionSetting(props){
   return(
     <div>
@@ -38,7 +39,7 @@ function TimerDisplay(props){
 }
 
 function PlayControl(props){
-  return <i className="material-icons">{props.isPlaying?"stop":"play_circle_outline"}</i>;
+  return <i className="material-icons" onClick={props.onClick}>{props.isPlaying?"stop":"play_circle_outline"}</i>;
 }
 
 function ResetControl(props){
@@ -54,11 +55,13 @@ class App extends React.Component {
       break_length: defaultSetting.break_length,
       isPlaying: false,
       isBreak: false,
+      isPause: false,
       time_left: defaultSetting.session_length * 60,
     };
     this.renderMinSec = this.renderMinSec.bind(this);
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
+    this.countdown = this.countdown.bind(this);
   }
 
   renderMinSec(){
@@ -87,6 +90,20 @@ class App extends React.Component {
     }
   }
 
+  countdown(){
+    let id = setInterval(timer.bind(this), 1000);
+    function timer(){
+      if(this.state.isPause || this.state.time_left === 0){
+        clearInterval(id);
+        this.setState({isPlaying: false});
+      } else {
+        this.setState({time_left: this.state.time_left - 1});
+      }
+    }
+  }
+
+
+
 
 
   render(){
@@ -103,7 +120,7 @@ class App extends React.Component {
         </div>
 
         <div className="container-control">
-          <PlayControl isPlaying={this.state.isPlaying}/>
+          <PlayControl isPlaying={this.state.isPlaying} onClick={this.countdown}/>
           <ResetControl />
         </div>
       </div>
