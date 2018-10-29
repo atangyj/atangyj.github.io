@@ -1,86 +1,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import arrow_upward from './img/arrow_upward.svg';
-import arrow_downward from './img/arrow_downward.svg';
-import play from './img/play.svg';
-import reset from './img/reset.svg';
-import stop from './img/stop.svg';
 
+const defaultSetting = {
+  session_length: 25,
+  break_length: 5
+};
 
-let intervalId;
-
-const inital = {
-  break_length: 5,
-  session_length: 25
-}
-
-function Time_Left(props){
-  let secs = props.time_left % 60;
-  if (secs == 0){
-    secs = secs + '0';
-  }
-  const mins = (props.time_left - secs) / 60;
+function SessionSetting(props){
   return(
     <div>
-      <div id="timer_lable"></div>
-      <div>{mins + ':' + secs}</div>
+      <div id="session-label">Session Length</div>
+      <span id="session-length">{props.session_length}</span>
     </div>
   )
 }
 
-function Break_Length(props){
+function BreakSetting(props){
   return(
-    <span>{props.break_length}</span>
+    <div>
+      <div id="break-label">Break Length</div>
+      <span id="break-label">{props.break_length}</span>
+    </div>
   )
 }
 
-function Break_Increment(props){
+function TimerDisplay(props){
   return(
-    <img src={arrow_upward} alt="increment" onClick={props.onClick}/>
+    <div>
+      <div id="time-label"></div>
+      <span id="time-left"></span>
+    </div>
   )
 }
 
-function Break_Decrement(props){
-  return(
-    <img src={arrow_downward} alt="decrement" onClick={props.onClick} />
-  )
+function PlayControl(props){
+  return <i class="material-icons">{props.isPlaying?"stop":"play_circle_outline"}</i>;
 }
 
-function Session_Length(props){
-  return(
-    <span>{props.session_length}</span>
-  )
-}
-
-function Session_Increment(props){
-  return(
-    <img src={arrow_upward} alt="increment" onClick={props.onClick} />
-  )
-}
-
-function Session_Decrement(props){
-  return(
-    <img src={arrow_downward} alt="decrement" onClick={props.onClick} />
-  )
-}
-
-function Start(props){
-  return(
-    <img src={play} alt="play" onClick={props.onClick} />
-  )
-}
-
-function Stop(props){
-  return(
-    <img src={stop} alt="stop" onClick={props.onClick} />
-  )
-}
-
-function Reset(props){
-  return(
-    <img src={reset} alt="reset" onClick={props.onClick} />
-  )
+function ResetControl(props){
+  return <i class="material-icons">replay</i>;
 }
 
 
@@ -88,112 +47,34 @@ class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      break_length: inital.break_length,
-      session_length: inital.session_length,
-      time_left: inital.session_length * 60,
-      min_sec: inital.session_length + ':' + '00',
-      isCountdown: false
-    }
-    this.sessionIncrement = this.sessionIncrement.bind(this);
-    this.sessionDecrement = this.sessionDecrement.bind(this);
-    this.breakIncrement = this.breakIncrement.bind(this);
-    this.breakDecrement = this.breakDecrement.bind(this);
-    this.resetCounter = this.resetCounter.bind(this);
-    this.pressPlay = this.pressPlay.bind(this);
-    this.countdown = this.countdown.bind(this);
-    this.updateDisplayTime = this.updateDisplayTime.bind(this);
-  }
-
-  updateDisplayTime(){
-    this.setState({min_sec: 'what happened!!!'});
-  }
-
-  sessionIncrement(){
-    this.setState({
-      session_length: this.state.session_length + 1,
-      time_left: this.state.session_left
-    });
-  }
-
-  sessionDecrement(){
-    if(this.state.session_length >1){
-      this.setState({
-        session_length: this.state.session_length - 1,
-        time_left: this.state.session_left
-      });
-    }
-  }
-
-  breakIncrement(){
-    this.setState({break_length: this.state.break_length + 1});
-  }
-
-  breakDecrement(){
-    if(this.state.break_length > 1){
-      this.setState({break_length: this.state.break_length - 1});
-    }
-  }
-
-  resetCounter(){
-    this.setState({
-      break_length: inital.break_length,
-      session_length: inital.session_length,
-      min_sec: inital.session_length + ':' + '00'
-    });
-  }
-
-  pressPlay(){
-    intervalId = setInterval(this.countdown, 1000);
-  }
-
-  countdown(){
-   this.setState({time_left: this.state.time_left - 1});
-   const secs = this.state.time_left % 60;
-   const mins = (this.state.time_left - secs) / 60;
-   this.setState({min_sec: mins + ':' + secs});
-
-  }
-
-  stopCountdown(){
-    clearInterval(intervalId);
+      session_length: defaultSetting.session_length,
+      break_length: defaultSetting.break_length,
+      isPlaying: false,
+      isBreak: false,
+    };
   }
 
   render(){
     return(
-      <div className="container">
-        <div id="setting">
-
-          <div id="break_label">
-            <Break_Decrement onClick = {this.breakDecrement} />
-            <Break_Length break_length= {this.state.break_length} />
-            <Break_Increment onClick = {this.breakIncrement} />
-          </div>
-
-          <div id="session_label">
-            <Session_Decrement onClick= {this.sessionDecrement} />
-            <Session_Length session_length= {this.state.session_length} />
-            <Session_Increment onClick= {this.sessionIncrement} />
-          </div>
-
+      <div>
+        <h1>Pomodoro Clock</h1>
+        <div className="container-settings">
+          <SessionSetting session_length={this.state.session_length}/>
+          <BreakSetting break_length={this.state.break_length}/>
         </div>
 
-        <div id="display">
-          <Time_Left time_left = {this.state.time_left} />
+        <div className="container-display">
+          <TimerDisplay />
         </div>
 
-        <div id="control">
-          <Start onClick = {this.pressPlay} />
-          <Stop onClick = {this.stopCountdown} />
-          <Reset onClick = {this.resetCounter} />
+        <div className="container-control">
+          <PlayControl isPlaying={this.state.isPlaying}/>
+          <ResetControl />
         </div>
-
       </div>
-
     )
   }
 }
-
-
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
