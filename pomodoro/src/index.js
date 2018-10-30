@@ -11,7 +11,7 @@ const defaultSetting = {
 
 function SessionSetting(props){
   return(
-    <div>
+    <div className="container-session">
       <div id="session-label">Session Length</div>
       <span id="session-length">{props.session_length}</span>
       <i className="material-icons" onClick={props.pressIncrement}>add</i>
@@ -22,7 +22,7 @@ function SessionSetting(props){
 
 function BreakSetting(props){
   return(
-    <div>
+    <div className="container-break">
       <div id="break-label">Break Length</div>
       <span id="break-label">{props.break_length}</span>
       <i className="material-icons" onClick={props.pressIncrement}>add</i>
@@ -33,19 +33,19 @@ function BreakSetting(props){
 
 function TimerDisplay(props){
   return(
-    <div>
-      <div id="time-label">time-label</div>
+    <div className="time-display">
+      <div id="time-label">{props.isSession? "Session":"Break"}</div>
       <span id="time-left">{props.time_left}</span>
     </div>
   )
 }
 
 function PlayControl(props){
-  return <i className="material-icons" onClick={props.onClick}>{props.isPause?"play_circle_outline":"stop"}</i>;
+  return <i className="material-icons play" onClick={props.onClick}>{props.isPause?"play_circle_outline":"stop"}</i>;
 }
 
 function ResetControl(props){
-  return <i className="material-icons" onClick={props.onClick}>replay</i>;
+  return <i className="material-icons reset" onClick={props.onClick}>replay</i>;
 }
 
 
@@ -159,7 +159,7 @@ class App extends React.Component {
 
   render(){
     return(
-      <div>
+      <div className="container">
         <h1>Pomodoro Clock</h1>
         <div className="container-settings">
           <SessionSetting session_length={this.state.session_length} pressIncrement={()=>this.increment('session')} pressDecrement={()=>this.decrement('session')}/>
@@ -167,7 +167,7 @@ class App extends React.Component {
         </div>
 
         <div className="container-display">
-          <TimerDisplay time_left={this.renderMinSec()}/>
+          <TimerDisplay time_left={this.renderMinSec()} isSession={this.state.isSession}/>
         </div>
 
         <div className="container-control">
