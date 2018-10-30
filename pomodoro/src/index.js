@@ -45,7 +45,7 @@ function PlayControl(props){
 }
 
 function ResetControl(props){
-  return <i className="material-icons">replay</i>;
+  return <i className="material-icons" onClick={props.onClick}>replay</i>;
 }
 
 
@@ -64,6 +64,7 @@ class App extends React.Component {
     this.decrement = this.decrement.bind(this);
     this.countdown = this.countdown.bind(this);
     this.pause = this.pause.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   renderMinSec(){
@@ -75,23 +76,45 @@ class App extends React.Component {
   }
 
   increment(session_break){
-    const time = session_break === 'session'? this.state.session_length:this.state.break_length;
-    if(time < 60){
-      this.setState({
-        session_length: time + 1,
-        time_left: this.state.time_left + 60
-      });
+    if(this.state.isPause){
+      if(session_break==="session"){
+        if(this.state.session_length <60){
+          this.setState({
+            session_length: this.state.session_length + 1,
+            time_left: this.state.isSession? this.state.session_length*60 + 60: this.state.time_left
+          })
+        }
+
+      } else {
+        if(this.state.break_length < 60){
+          this.setState({
+            break_length: this.state.break_length + 1,
+            time_left: this.state.isSession? this.state.time_left: this.state.break_length*60 + 60
+          })
+        }
+      }
     }
 
   }
 
   decrement(session_break){
-    const time = session_break === 'session'? this.state.session_length:this.state.break_length;
-    if(time >= 0){
-      this.setState({
-        session_length: time - 1,
-        time_left: this.state.time_left - 60
-      });
+    if(this.state.isPause){
+      if(session_break==="session"){
+        if(this.state.session_length > 1){
+          this.setState({
+            session_length: this.state.session_length - 1,
+            time_left: this.state.isSession? this.state.session_length*60 - 60: this.state.time_left
+          })
+        }
+
+      } else {
+        if(this.state.break_length > 1){
+          this.setState({
+            break_length: this.state.break_length - 1,
+            time_left: this.state.isSession? this.state.time_left: this.state.break_length*60 - 60
+          })
+        }
+      }
     }
   }
 
@@ -125,6 +148,13 @@ class App extends React.Component {
     this.setState({isPause: true});
   }
 
+  reset(){
+    this.setState({
+      session_length: defaultSetting.session_length,
+      break_length: defaultSetting.break_length,
+      time_left: defaultSetting.session_length * 60
+    })
+  }
 
 
   render(){
@@ -142,7 +172,7 @@ class App extends React.Component {
 
         <div className="container-control">
           <PlayControl isPause={this.state.isPause} onClick={this.state.isPause?this.countdown:this.pause}/>
-          <ResetControl />
+          <ResetControl onClick={this.reset}/>
         </div>
       </div>
     )
