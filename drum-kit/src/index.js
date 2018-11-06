@@ -100,20 +100,11 @@ class DrumPad extends React.Component {
   }
 }
 
-
-// function VolumeControl(props){
-//   return(
-//     <div onChange={props.onChange}>
-//       <input type="range" min="0" max="1" step="0.1"/>
-//     </div>
-//   )
-// }
-
 class VolumeControl extends React.Component {
   render(){
     return(
         <div onChange={this.props.onChange} >
-          <input className="volSlider" type="range" min="0" max="1" step="0.1" ref={this.props.volRef}/>
+            <input className="volSlider" type="range" min="0" max="1" step="0.1" ref={this.props.volRef}/>
         </div>
       )
   }
@@ -137,12 +128,14 @@ class Drum extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      display: 'I WILL ROCK U',
+      display: "I will rock U",
       source: null,
       isBankOne: true,
       volume: 1,
       isOn: true,
       volDisable: false,
+      isAnimate: false,
+
     }
 
     this.Ref = React.createRef();
@@ -157,12 +150,23 @@ class Drum extends React.Component {
     this.renderDrumPad = this.renderDrumPad.bind(this);
     this.disableSlider = this.disableSlider.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.animateIt = this.animateIt.bind(this);
+    this.removeTransition = this.removeTransition.bind(this);
+
   }
 
   pressPad(e){
+    this.animateIt(e);
     this.setSource(e);
     this.playSound();
     this.displayClip(e);
+
+  }
+
+  animateIt(e){
+    e.target.classList.add('animating');
+    document.getElementById('display').classList.add('playing');
+
   }
 
   setSource(e){
@@ -181,6 +185,7 @@ class Drum extends React.Component {
     this.Ref.current.volume = this.state.volume;
     this.Ref.current.load();
     this.Ref.current.play();
+
   }
 
   displayClip(e){
@@ -213,7 +218,7 @@ class Drum extends React.Component {
 
   renderDrumPad(i){
     return(
-      <DrumPad idx={i} keyname={soundBank[i].key} onClick={this.pressPad} />
+      <DrumPad idx={i} keyname={soundBank[i].key} onClick={this.pressPad}/>
     )
 
   }
@@ -231,19 +236,25 @@ class Drum extends React.Component {
       this.playSound();
       this.setState({display: src.sound});
     }
+  }
 
-
+  removeTransition(e){
+      e.target.classList.remove('animating');
   }
 
   componentDidMount(){
     window.onkeydown = this.handleKeyPress;
+    const pads = document.getElementsByClassName('drum-pad');
+    for (let i =0 ; i < pads.length; i++){
+      pads[i].addEventListener("transitionend", this.removeTransition);
+    }
   }
 
   render(){
     return(
       <div className="container-main">
         <div className="container-display">
-          <p>{this.state.display.toUpperCase()}</p>
+            <p id="display">{this.state.display.toUpperCase()}</p>
         </div>
 
         <div className="container-drum-pads">

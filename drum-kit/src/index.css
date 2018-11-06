@@ -1,3 +1,8 @@
+@font-face {
+  font-family: vibur;
+  src: url(Vibur-Regular.ttf);
+}
+
 html {
   height: 100%;
 }
@@ -88,25 +93,32 @@ input:checked+.slider:before {
 
 .container-main {
   width: 80%;
-  margin: 0 auto;
-  padding-top: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .container-display {
-  margin-top: 120px;
+  margin-top: 100px;
   margin-bottom: 100px;
 }
 
 .container-display p {
   /* outline: 3px solid blue; */
   text-align: center;
-  font-size: 36px;
-  color: white;
   letter-spacing: 10px;
+  font: 65px "Vibur";
+  color: #F6FCFE;
+  text-shadow: 0 -20px 100px, 0 0 2px, 0 0 1em #5FD0F6, 0 0 0.5em #5FD0F6, 0 0 0.1em #5FD0F6, 0 5px 3px #000;
 }
 
 .container-drum-pads, .container-settings {
   text-align: center;
+}
+
+.container-settings {
+  margin: 20px 0px;
 }
 
 .container-settings button {
@@ -128,11 +140,14 @@ input:checked+.slider:before {
   height: 50px;
   line-height: 50px;
   text-align: center;
-  font-size: 25px;
-  border: 1px solid white;
-  border-radius: 50%;
-  margin: 5px 10px 50px 10px;
-  color: white;
+  font-size: 20px;
+  border: 1.5px solid #F6FCFE;
+  border-radius: 10%;
+  margin: 10px 10px 5px 10px;
+  color: #F6FCFE;
+  transition: all .05s;
+  box-shadow: 0 0 5px;
+  cursor: pointer;
 }
 
 .volSlider {
@@ -142,6 +157,36 @@ input:checked+.slider:before {
 
 body {
   height: 100%;
-  background-repeat: no-repeat;
-  background-image: linear-gradient(to bottom, #09203f 0%, #537895 100%);
+  background-image: url('bg.png');
+}
+
+input[type="range"] {
+  appearance: none;
+  background: transparent;
+  border-radius: 3px;
+  height: 5px;
+  cursor: pointer;
+  background-color: rgba(256, 256, 256, .5);
+}
+
+button {
+  cursor: pointer;
+}
+
+/* animation */
+
+.animating {
+  transform: scale(1.1);
+  box-shadow: 0 0 5px #5FD0F6;
+}
+
+/* RWD */
+
+@media screen and (max-width:768px) {
+  .container-display {
+    margin: 30px 0px;
+  }
+  .container-display p {
+    font-size: 45px;
+  }
 }
