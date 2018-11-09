@@ -282,6 +282,35 @@
       font-size: 18px;
       border-top: 1px solid #000;
     }
+
+
+    @media only screen and (max-width: 960px) {
+      #container-result {
+        width: 90%;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 40px;
+        grid-row-gap: 50px;
+      }
+
+      #result-label {
+        margin: 50px auto;
+
+      }
+    }
+
+    @media only screen and (max-width: 480px) {
+      #container-result {
+        width: 90%;
+        grid-template-columns: 1fr;
+        grid-column-gap: 40px;
+        grid-row-gap: 50px;
+      }
+
+      #result-label {
+        margin: 50px auto;
+
+      }
+    }
   </style>
 
 </head>
