@@ -52,7 +52,21 @@
       getCityName(lat, lon);
     }
 
-    function fail(errorMsg) {}
+    function fail(error) {
+      var errorTypes = {
+        0: "Unknown error",
+        1: "Permission denied by user",
+        2: "Position is not available",
+        3: "Request timed out"
+      };
+
+      var errorMsg = errorTypes[error.code];
+      if (error.code == 0 || error.code == 2) {
+        errorMsg = errorMsg + error.message;
+      }
+
+      alert(errorMsg);
+    }
 
 
     function getWeather(latitude, longitude) {
