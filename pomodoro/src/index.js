@@ -13,8 +13,8 @@ function SessionSetting(props){
   return(
     <div className="container-session">
       <div id="session-label">Session Length</div>
-      <span id="session-length">{props.session_length}</span>
       <i className="material-icons" onClick={props.pressIncrement}>add</i>
+      <span id="session-length">{props.session_length}</span>
       <i className="material-icons" onClick={props.pressDecrement}>remove</i>
     </div>
   )
@@ -24,8 +24,8 @@ function BreakSetting(props){
   return(
     <div className="container-break">
       <div id="break-label">Break Length</div>
-      <span id="break-label">{props.break_length}</span>
       <i className="material-icons" onClick={props.pressIncrement}>add</i>
+      <span id="break-length">{props.break_length}</span>
       <i className="material-icons" onClick={props.pressDecrement}>remove</i>
     </div>
   )
@@ -49,7 +49,7 @@ function ResetControl(props){
 }
 
 
-class App extends React.Component {
+class Counter extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -58,6 +58,7 @@ class App extends React.Component {
       isSession: true,
       isPause: true,
       time_left: defaultSetting.session_length * 60,
+      input: null,
     };
     this.renderMinSec = this.renderMinSec.bind(this);
     this.increment = this.increment.bind(this);
@@ -65,6 +66,7 @@ class App extends React.Component {
     this.countdown = this.countdown.bind(this);
     this.pause = this.pause.bind(this);
     this.reset = this.reset.bind(this);
+    this.handleInput = this.handleInput.bind(this);
   }
 
   renderMinSec(){
@@ -73,6 +75,10 @@ class App extends React.Component {
     min = min < 10 ? '0'+ min : min;
     second = Math.floor(second / 10)? second : '0' + second % 10;
     return `${min}:${second}`;
+  }
+
+  handleInput(e){
+    this.setState({input: e.target.value});
   }
 
   increment(session_break){
@@ -160,19 +166,37 @@ class App extends React.Component {
   render(){
     return(
       <div className="container">
-        <h1>Pomodoro Clock</h1>
+
+        <input type="text" placeholder="What's your goal?" onChange={this.handleInput}/>
+
+        <div className="container-display">
+            <TimerDisplay time_left={this.renderMinSec()} isSession={this.state.isSession}/>
+        </div>
+
+        <div className="container-control">
+            <PlayControl isPause={this.state.isPause} onClick={this.state.isPause?this.countdown:this.pause}/>
+            <ResetControl onClick={this.reset}/>
+        </div>
+
         <div className="container-settings">
           <SessionSetting session_length={this.state.session_length} pressIncrement={()=>this.increment('session')} pressDecrement={()=>this.decrement('session')}/>
           <BreakSetting break_length={this.state.break_length} pressIncrement={()=>this.increment('break')} pressDecrement={()=>this.decrement('break')} />
         </div>
+      </div>
+    )
+  }
+}
 
-        <div className="container-display">
-          <TimerDisplay time_left={this.renderMinSec()} isSession={this.state.isSession}/>
-        </div>
-
-        <div className="container-control">
-          <PlayControl isPause={this.state.isPause} onClick={this.state.isPause?this.countdown:this.pause}/>
-          <ResetControl onClick={this.reset}/>
+class App extends React.Component {
+  render(){
+    return(
+      <div>
+        <h1>WORKOUT POMODORO</h1>
+        <div className="container-outer">
+          <Counter />
+          <Counter />
+          <Counter />
+          <Counter />
         </div>
       </div>
     )

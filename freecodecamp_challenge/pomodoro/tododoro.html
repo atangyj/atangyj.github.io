@@ -13,7 +13,7 @@
       color: rgb(118, 30, 214);
       font-family: 'Roboto', sans-serif;
 
-      outline: 1px dashed gray;
+      /* outline: 1px dashed gray; */
     }
 
     body {
@@ -32,6 +32,7 @@
       line-height: 50px;
       border: 2px solid rgb(118, 30, 214);
       font-size: 32px;
+      padding: 0px 15px;
 
     }
 
@@ -63,9 +64,15 @@
       border-bottom: 2px solid rgb(118, 30, 214);
       border-left: 2px solid rgb(118, 30, 214);
       border-right: 2px solid rgb(118, 30, 214);
-      padding: 10px 15px;
+      padding: 15px 30px;
+      position: relative;
       position: relative;
 
+    }
+
+    .list:hover {
+      cursor: pointer;
+      background-color: rgba(118, 30, 214, 0.3);
     }
 
     .column {
@@ -76,7 +83,7 @@
       display: block;
       line-height: 38px;
       font-size: 32px;
-      background-color: rgb(254, 228, 221);
+      background-color: transparent;
       margin-bottom: 10px;
     }
 
@@ -95,12 +102,14 @@
 
     .unchecked {
       border: 2px solid rgb(118, 30, 214);
-      background-color: rgb(254, 228, 221);
+      background-color: transparent;
     }
 
     .play,
     .pause,
-    .breakIcon {
+    .coffeebreak,
+    .pauseBreak,
+    .done {
       position: absolute;
       right: 15px;
       top: 50%;
@@ -117,21 +126,40 @@
       transform: translateY(-50%);
     }
 
-    .pause {
+    .pause,
+    .coffeebreak,
+    .pauseBreak,
+    .done {
       display: none;
     }
 
-    .breakIcon {
-      display: none;
-    }
+
 
     .parameter {
       float: left;
-
+      font-size: 24px;
+      margin-right: 20px;
+      width: 25%;
     }
 
     .parameter input {
       background-color: rgb(254, 228, 221);
+    }
+
+    .button {
+      /* float: right; */
+      text-align: center;
+      /* padding-right: 30px; */
+    }
+
+    .arrow {
+      display: block;
+      text-align: center;
+
+    }
+
+    .arrow:hover {
+      cursor: pointer;
     }
 
     .setting::after {
@@ -145,7 +173,27 @@
       border-left: 2px solid rgb(118, 30, 214);
       border-right: 2px solid rgb(118, 30, 214);
       padding: 10px 15px;
+      display: none;
+    }
 
+    #done {
+      font-size: 24px;
+      background-color: rgb(118, 30, 214);
+      color: rgb(254, 228, 221);
+      padding: 10px 30px;
+      vertical-align: middle;
+
+    }
+
+    #done:hover {
+      cursor: pointer;
+    }
+
+    .close {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: none;
     }
   </style>
 </head>
@@ -171,15 +219,53 @@
       <i class="material-icons add">add</i>
     </div>
     <div class="setting">
-      <div class="parameter">interval<input type="text" id="interval" value=""></div>
-      <div class="parameter">break<input type="text" id="break" value=""></div>
-      <div class="parameter">session<input type="text" id="session" value=""></div>
+      <div class="parameter">interval
+        <div class="button">
+          <i class="material-icons arrow up">arrow_drop_up</i>
+          <span id="interval"></span>
+          <i class="material-icons arrow down">arrow_drop_down</i>
+        </div>
+      </div>
+      <div class="parameter">break
+        <div class="button">
+          <i class="material-icons arrow up">arrow_drop_up</i>
+          <span id="break"></span>
+          <i class="material-icons arrow down">arrow_drop_down</i>
+        </div>
+      </div>
+      <div class="parameter">session
+        <div class="button">
+          <i class="material-icons arrow up">arrow_drop_up</i>
+          <span id="session"></span>
+          <i class="material-icons arrow down">arrow_drop_down</i>
+        </div>
+      </div>
+
       <input class="parameter" type="submit" id="done" value="Done">
+
     </div>
+    <audio id="sound_done">
+      <source src="finished_sound.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+    </audio>
+
+    <audio id="sound_timesup">
+      <source src="timesup_sound.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+    </audio>
+
   </div>
 
 
   <script>
+    window.onload = function() {
+      controller.addClock();
+      controller.addClock();
+      controller.addClock();
+      document.getElementsByClassName('input-field')[0].value = 'Yoga';
+      document.getElementsByClassName('input-field')[1].value = 'Workout';
+      document.getElementsByClassName('input-field')[2].value = 'Freecodecamp';
+    }
     const view = {
       displayClock() {
         const container = document.getElementsByClassName('container')[0],
@@ -190,14 +276,19 @@
           time = document.createElement('span'),
           playIcon = document.createElement('i'),
           pauseIcon = document.createElement('i'),
-          breakIcon = document.createElement('i');
+          breakIcon = document.createElement('i'),
+          pauseBreakIcon = document.createElement('i'),
+          doneIcon = document.createElement('i'),
+          closeIcon = document.createElement('i');
 
         container.appendChild(list);
+
         list.appendChild(listL);
         list.appendChild(listR);
+        list.appendChild(closeIcon);
         listL.appendChild(listTitle);
 
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < model.default_initialSession; i++) {
           const dot = document.createElement('div');
           listL.appendChild(dot);
           dot.classList.add('dot', 'unchecked');
@@ -207,29 +298,51 @@
         listR.appendChild(playIcon);
         listR.appendChild(pauseIcon);
         listR.appendChild(breakIcon);
+        listR.appendChild(pauseBreakIcon);
+        listR.appendChild(doneIcon);
+
 
         list.classList.add('list');
         listL.classList.add('column', 'left');
         listR.classList.add('column', 'right');
         listTitle.setAttribute('type', 'text');
-        listTitle.setAttribute('value', 'what are you doing?');
+        listTitle.setAttribute('value', model.default_Title);
 
-        time.classList.add('interval');
+        time.classList.add('interval', 'counter_' + model.counterNum);
         listL.classList.add('counter_' + model.counterNum);
         listTitle.classList.add('input-field');
         playIcon.classList.add('material-icons', 'play', 'counter_' + model.counterNum);
         pauseIcon.classList.add('material-icons', 'pause', 'counter_' + model.counterNum);
         breakIcon.classList.add('material-icons', 'coffeebreak', 'counter_' + model.counterNum);
+        pauseBreakIcon.classList.add('material-icons', 'pauseBreak', 'counter_' + model.counterNum);
+        doneIcon.classList.add('material-icons', 'done', 'counter_' + model.counterNum);
+        closeIcon.classList.add('material-icons', 'close', 'counter_' + model.counterNum);
 
+        list.addEventListener('mouseenter', view.displayCloseButton.bind(view));
+        list.addEventListener('mouseleave', view.hideCloseButton.bind(view));
+
+        listTitle.addEventListener('focus', view.clearText.bind(view));
+        listTitle.addEventListener('blur', view.showText.bind(view));
         playIcon.addEventListener('click', controller.runClock.bind(controller));
         pauseIcon.addEventListener('click', controller.pauseClock.bind(controller));
+        breakIcon.addEventListener('click', controller.runBreak.bind(controller));
+        pauseBreakIcon.addEventListener('click', controller.pauseClock.bind(controller));
         time.addEventListener('click', this.displaySetting.bind(controller));
+        closeIcon.addEventListener('click', controller.deleteTimer.bind(controller));
 
         listTitle.innerHTML = model.clock[model.counterNum].title;
-        time.innerHTML = model.clock[model.counterNum].intervalLength;
+        if (model.clock[model.counterNum].initialInterval.toString().length < 2) {
+          time.innerHTML = '0' + model.clock[model.counterNum].initialInterval + ' min 00 s';
+        } else {
+          time.innerHTML.innerHTML = model.clock[model.counterNum].initialInterval + ' min 00 s';
+        }
+        // time.innerHTML = model.clock[model.counterNum].initialInterval + ' min';
         playIcon.innerHTML = 'play_circle_outline';
         pauseIcon.innerHTML = 'pause_circle_outline';
         breakIcon.innerHTML = 'free_breakfast';
+        pauseBreakIcon.innerHTML = 'pause_circle_outline';
+        doneIcon.innerHTML = 'replay';
+        closeIcon.innerHTML = 'close';
 
         model.counterNum++;
 
@@ -244,37 +357,113 @@
       },
 
       displaySetting(e) {
-
+        document.getElementsByClassName('setting')[0].style.display = 'block';
         const index = Number(e.target.nextSibling.classList[2].substr(8));
-        document.getElementById('interval').value = model.clock[index].intervalLength;
-        document.getElementById('break').value = model.clock[index].breakLength;
-        document.getElementById('session').value = model.clock[index].session;
+        document.getElementById('interval').innerHTML = model.clock[index].initialInterval;
+        document.getElementById('break').innerHTML = model.clock[index].initialBreak;
+        document.getElementById('session').innerHTML = model.clock[index].session;
         const done = document.getElementById('done');
+        const arrows = document.getElementsByClassName('arrow');
         if (typeof done.classList[0] === 'undefined') {
           done.classList.add(index);
+
         } else {
           done.className = "";
           done.classList.add(index);
+
         }
       },
 
       displayIntervalLength(index) {
-        document.getElementsByClassName('counter_' + index)[1].previousSibling.innerHTML = model.clock[index].intervalLength;
+        document.getElementsByClassName('counter_' + index)[1].innerHTML = model.clock[index].initialInterval + ' min';
       },
 
-      displaySession() {
-        document.getElementsByClassName('session');
+      displaySession(index) {
+        const dots = document.querySelectorAll('.counter_' + index + ' .dot');
+        const newDots = model.clock[index].session;
+        for (let i = 0; i < dots.length; i++) {
+          dots[i].remove();
+        }
+        for (let i = 0; i < newDots; i++) {
+          const newdot = document.createElement('div');
+          document.querySelector('.counter_' + index + ' input').insertAdjacentElement('afterend', newdot);
+          newdot.classList.add('dot', 'unchecked');
+
+        }
 
       },
 
-      displayCountdown() {
+      displayPauseIcon(e) {
+        e.target.style.display = 'none';
+        e.target.nextSibling.style.display = 'inline-block';
+      },
 
+      displayPauseBreakIcon(e) {
+        e.target.style.display = 'none';
+        e.target.previousSibling.style.display = 'inline-block';
+      },
+
+      displayPlayIcon(e) {
+        e.target.nextSibling.style.display = 'none';
+        e.target.previousSibling.previousSibling.style.display = 'inline-block';
+      },
+
+      displayBreakIcon(e) {
+        e.target.nextSibling.style.display = 'none';
+        e.target.nextSibling.nextSibling.style.display = 'inline-block';
+      },
+
+      displayFinished(e) {
+        e.target.nextSibling.style.display = 'none';
+        e.target.previousSibling.innerHTML = 'Finished!';
+
+      },
+
+      clearText(e) {
+        if (e.target.value === model.default_Title) {
+          e.target.value = "";
+        }
+      },
+
+      showText(e) {
+        if (e.target.value === "") {
+          e.target.value = model.default_Title;
+
+        } else {
+          const i = Number(e.target.parentNode.classList[2].substr(8));
+          model.clock[i].title = e.target.value;
+        }
+      },
+      closeSetting() {
+        document.getElementsByClassName('setting')[0].style.display = 'none';
+      },
+
+      displayCloseButton(e) {
+        e.target.lastChild.style.display = 'inline-block';
+      },
+      hideCloseButton(e) {
+        e.target.lastChild.style.display = 'none';
+      },
+
+      playFinishedSound() {
+        document.getElementById('sound_done').play();
+      },
+
+      playTimesupSound() {
+        document.getElementById('sound_timesup').play();
       }
+
+
+
 
 
     };
 
     const model = {
+      default_Title: "what are you doing?",
+      default_initialInterval: 1,
+      default_initialBreak: 1,
+      default_initialSession: 2,
       clock: [],
       counterNum: 0
     };
@@ -285,33 +474,63 @@
         view.displayClock();
       },
       createClock() {
-        const c = new Clock('what are you doing?', 4, 4, 5, 5 * 60, false);
+        const c = new Clock(model.default_Title, model.default_initialSession, model.default_initialInterval, model.default_initialBreak, false);
         model.clock.push(c);
       },
-      runClock(e) {
-        // if (model.clock)
-        e.target.style.display = 'none';
-        e.target.nextSibling.style.display = 'inline-block';
 
+      runClock(e) {
+        view.displayPauseIcon(e);
         const indexCounter = Number(e.target.classList[2].substr(8));
-        console.log(e.target.classList);
+        // if (model.clock[indexCounter].intervalLength.toString().length < 2) {
+        //   e.target.previousSibling.innerHTML = '0' + model.clock[indexCounter].intervalLength + ' min 00 s';
+        // } else {
+        //   e.target.previousSibling.innerHTML = model.clock[indexCounter].intervalLength + ' min 00 s';
+        // }
+
+
+        // console.log(indexCounter);
+        // console.log(model.clock[indexCounter]);
+
         model.clock[indexCounter].isCountdown = !model.clock[indexCounter].isCountdown;
         const timer = setInterval(countdown, 1000);
 
         function countdown() {
           if (model.clock[indexCounter].isCountdown) {
-            if (model.clock[indexCounter].intervalLength <= 0) {
-              clearInterval(timer);
-              this.setBreakLength(indexCounter);
-              view.displayCompleteSession(indexCounter);
 
-            } else {
-              model.clock[indexCounter].intervalLength--;
-              e.target.previousSibling.innerHTML = model.clock[indexCounter].intervalLength;
-              if (model.clock[indexCounter].intervalLength == 0) {
-                e.target.nextSibling.style.display = 'none';
-                e.target.style.display = 'inline-block';
+            model.clock[indexCounter].intervalLength--;
+            let m = Math.floor(model.clock[indexCounter].intervalLength / 60);
+            if (m.toString().length < 2) {
+              m = '0' + m;
+            }
+
+            let s = model.clock[indexCounter].intervalLength % 60;
+            if (s.toString().length < 2) {
+              console.log(s);
+              s = '0' + s;
+            }
+
+
+
+
+            e.target.previousSibling.innerHTML = m + ' min ' + s + ' s';
+
+            if (model.clock[indexCounter].intervalLength == 0) {
+
+
+              clearInterval(timer);
+              view.displayCompleteSession(indexCounter);
+              model.clock[indexCounter].isCountdown = !model.clock[indexCounter].isCountdown;
+
+              model.clock[indexCounter].session--;
+              if (model.clock[indexCounter].session > 0) {
+                view.displayBreakIcon(e);
+
+                model.clock[indexCounter].intervalLength = model.clock[indexCounter].initialInterval * 60;
+              } else {
+                view.displayFinished(e);
               }
+              // e.target.previousSibling.innerHTML = model.clock[indexCounter].initialBreak;
+              view.playFinishedSound();
             }
           } else {
 
@@ -323,34 +542,134 @@
       pauseClock(e) {
         e.target.style.display = 'none';
         e.target.previousSibling.style.display = 'inline-block';
-        const indexCounter = Number(e.target.classList[1].substr(8));
+        const indexCounter = Number(e.target.classList[2].substr(8));
         model.clock[indexCounter].isCountdown = !model.clock[indexCounter].isCountdown;
       },
 
       submitSetting(e) {
         const index = Number(e.target.className);
-        model.clock[index].intervalLength = document.getElementById('interval').value;
-        model.clock[index].breakLength = document.getElementById('break').value;
-        model.clock[index].session = document.getElementById('session').value;
+        model.clock[index].initialInterval = document.getElementById('interval').innerHTML;
+        model.clock[index].initialBreak = document.getElementById('break').innerHTML;
+        model.clock[index].session = document.getElementById('session').innerHTML;
         view.displayIntervalLength(index);
+        view.displaySession(index);
+        view.closeSetting();
 
       },
 
-      takeBreak(e) {
+      runBreak(e) {
+        view.displayPauseIcon(e);
+        const indexCounter = Number(e.target.classList[2].substr(8));
 
+        // console.log(model.clock[indexCounter]);
+        if (model.clock[indexCounter].initialBreak.toString().length < 2) {
+          e.target.previousSibling.previousSibling.previousSibling.innerHTML = '0' + model.clock[indexCounter].initialBreak + ' min 00 s';
+        } else {
+          e.target.previousSibling.previousSibling.previousSibling.innerHTML = model.clock[indexCounter].initialBreak + ' min 00 s';
+        }
+        model.clock[indexCounter].isCountdown = !model.clock[indexCounter].isCountdown;
+        const timer = setInterval(countdown, 1000);
+
+        function countdown() {
+          if (model.clock[indexCounter].isCountdown) {
+            // if (model.clock[indexCounter].breakLength <= 0) {
+
+            // this.setBreakLength(indexCounter);
+            // view.displayCompleteSession(indexCounter);
+
+
+
+            // } else {
+            model.clock[indexCounter].breakLength--;
+            // e.target.previousSibling.previousSibling.previousSibling.innerHTML = model.clock[indexCounter].breakLength;
+            // console.log(model.clock[indexCounter].breakLength);
+            var m = Math.floor(model.clock[indexCounter].breakLength / 60);
+            if (m.toString().length < 2) {
+              console.log(m);
+              m = '0' + m;
+            }
+            var s = model.clock[indexCounter].breakLength % 60;
+
+            if (s.toString().length < 2) {
+              console.log(s);
+              s = '0' + s;
+            }
+
+            e.target.previousSibling.previousSibling.previousSibling.innerHTML = m + ' min ' + s + ' s';
+
+            if (model.clock[indexCounter].breakLength == 0) {
+
+              clearInterval(timer);
+
+
+
+              model.clock[indexCounter].isCountdown = !model.clock[indexCounter].isCountdown;
+              // model.clock[indexCounter].session--;
+              if (model.clock[indexCounter].session > 0) {
+                view.displayPlayIcon(e);
+                model.clock[indexCounter].breakLength = model.clock[indexCounter].initialBreak * 60;
+                // e.target.previousSibling.previousSibling.previousSibling.innerHTML = model.clock[indexCounter].initialInterval;
+
+              } else {
+                view.displayFinished();
+              }
+              view.playTimesupSound();
+            }
+            // }
+          } else {
+
+            clearInterval(timer);
+          }
+        }
+      },
+
+      addTime(e) {
+        console.log(e.target.nextElementSibling.innerHTML);
+        e.target.nextElementSibling.innerHTML = Number(e.target.nextElementSibling.innerHTML) + 5;
+      },
+
+      minusTime(e) {
+        e.target.previousElementSibling.innerHTML = Number(e.target.previousElementSibling.innerHTML) - 5;
+        if (e.target.previousElementSibling.innerHTML < 0) {
+          e.target.previousElementSibling.innerHTML = 0;
+        }
+      },
+      addSession(e) {
+        e.target.nextElementSibling.innerHTML = Number(e.target.nextElementSibling.innerHTML) + 1;
+      },
+      minusSession(e) {
+        e.target.previousElementSibling.innerHTML = Number(e.target.previousElementSibling.innerHTML) - 1;
+        if (e.target.previousElementSibling.innerHTML < 1) {
+          e.target.previousElementSibling.innerHTML = 1;
+        }
+      },
+      deleteTimer(e) {
+        e.target.parentElement.remove();
       }
     };
 
-    function Clock(title, session, remainSession, intervalLength, breakLength, isCountdown) {
+    function Clock(title, session, initialInterval, initialBreak, isCountdown) {
       this.title = title;
       this.session = session;
-      this.intervalLength = intervalLength;
-      this.breakLength = breakLength;
+      this.intervalLength = initialInterval * 60;
+      this.initialInterval = initialInterval;
+      this.breakLength = initialBreak * 60;
+      this.initialBreak = initialBreak;
       this.isCountdown = isCountdown;
     }
 
     document.getElementsByClassName('add')[0].onclick = controller.addClock.bind(controller);
     document.getElementById('done').onclick = controller.submitSetting.bind(controller);
+
+    document.getElementById('interval').previousElementSibling.onclick = controller.addTime.bind(controller);
+    document.getElementById('break').previousElementSibling.onclick = controller.addTime.bind(controller);
+    document.getElementById('session').previousElementSibling.onclick = controller.addSession.bind(controller);
+
+    document.getElementById('interval').nextElementSibling.onclick = controller.minusTime.bind(controller);
+    document.getElementById('break').nextElementSibling.onclick = controller.minusTime.bind(controller);
+    document.getElementById('session').nextElementSibling.onclick = controller.minusSession.bind(controller);
+
+
     // document.getElementsByClassName('play')[0].onclick = controller.startClock.bind(controller);
   </script>
 </body>

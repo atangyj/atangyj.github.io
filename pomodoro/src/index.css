@@ -57,12 +57,145 @@ html {
 }
 
 body {
-  height: 100%;
-  background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+  background: rgb(254, 228, 221);
   background-repeat: no-repeat;
+  font-size: 100%;
 }
 
 .container {
+  display: grid;
+  height: 70vh;
+  width: 80%;
+  margin: 0 auto;
+  grid-template-rows: auto 50% auto auto;
+  background: #fff;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+}
+
+h1 {
+  text-align: center;
+  margin-top: 10%;
+  font-size: 1.5rem;
+  color: rgb(118, 30, 214);
+  font-weight: bolder;
+}
+
+.container-session, .container-break {
+  float: left;
+  width: 50%;
+}
+
+input, .container-display, .container-control, .container-session, .container-break {
+  text-align: center;
+}
+
+input {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  border: none;
+  color: rgb(118, 30, 214);
+}
+
+::placeholder {
+  color: rgb(118, 30, 214);
+}
+
+.container-display {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+#time-label {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: grey;
+}
+
+#time-left {
+  font-size: 4rem;
+}
+
+.container-control .play, .container-control .reset {
+  font-size: 4rem;
+  padding: 0 2rem;
+}
+
+.container-settings {
+  margin-top: 2rem;
+  color: grey;
+}
+
+.material-icons {
+  line-height: 3rem;
+  font-size: 2rem;
+  padding: 0 .625rem;
+}
+
+#session-length, #break-length {
+  font-size: 1.2rem;
+}
+
+.material-icons, #session-length, #break-length {
+  vertical-align: middle;
+}
+
+.material-icons {
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 960px) {
+  .container-outer {
+    width: 90%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  .container {
+    grid-template-rows: 20% 40% 20% auto;
+    height: 60vh;
+    width: 90%;
+  }
+  input {
+    font-size: 1rem;
+  }
+  #time-label {
+    font-size: .8rem;
+    margin-bottom: .8rem;
+  }
+  #time-left {
+    font-size: 3rem;
+  }
+  .container-control .play, .container-control .reset {
+    font-size: 2.5rem;
+    padding: 1rem;
+  }
+  .container-display {
+    margin-top: 1rem;
+  }
+  #session-label, #break-label {
+    font-size: .7rem;
+  }
+  .container-settings .material-icons {
+    font-size: 1rem;
+    padding: 0 .5rem;
+  }
+  #session-length, #break-length {
+    font-size: 1rem;
+  }
+  h1 {
+    font-size: 2rem;
+    margin-top: 5%;
+  }
+}
+
+/* .container {
   width: 350px;
   margin: 50px auto;
 }
@@ -113,4 +246,4 @@ body {
 
 .play, .reset {
   font-size: 50px;
-}
+} */
