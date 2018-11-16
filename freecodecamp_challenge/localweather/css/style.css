@@ -6,103 +6,87 @@
   font-family: 'Arimo', sans-serif;
 }
 
+html, body {
+  font-size: 100%;
+}
+
 #background {
   width: 100%;
   height: 100vh;
   background: url('../clear_sky.jpg');
   background-size: cover;
-  position: absolute;
-  filter: blur(5px);
+  position: fixed;
   top: 0;
   left: 0;
   z-index: -1;
+  filter: blur(3px);
+}
+
+.main, .main-info {
+  width: 100%;
 }
 
 .main {
-  width: 75%;
-  padding-top: 46.875%;
-  box-shadow: .5em .5em 1em rgba(0, 0, 0, .2), -.5em .5em 1em rgba(0, 0, 0, .2);
-  position: absolute;
-  top: 50vh;
-  left: 50vw;
-  transform: translate(-50%, -50%);
-  /* margin: 50vh auto 0;
-    transform: translateY(-50%); */
-}
-
-.main-info {
-  width: 50%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: rgba(256, 256, 256, 1);
-  box-sizing: border-box;
-  padding: 3em;
-}
-
-#main-photo {
-  width: 50%;
-  height: 100%;
-  background: url('../clear_sky.jpg');
-  background-size: cover;
-  position: absolute;
-  top: 0;
-  left: 50%;
-}
-
-.bottom {
-  position: absolute;
-  bottom: 3em;
+  text-align: center;
 }
 
 #icon {
-  position: absolute;
-  top: 0.5em;
-  right: 0.4em;
-  font-size: 10em;
-  /* border: 1px solid black; */
-}
-
-#cityName {
-  font-size: 1.5em;
-  margin-top: 1em;
-  font-weight: bold;
-}
-
-#temp {
-  font-size: 6.2em;
-  font-weight: bolder;
-}
-
-#temp:hover {
-  cursor: pointer;
+  font-size: 3em;
+  margin-top: 4rem;
 }
 
 #desc {
-  font-size: 2.5em;
-  display: block;
-  font-weight: bold;
-  font-style: italic;
+  margin-top: .5rem;
+  margin-bottom: 2em;
 }
 
-@media only screen and (max-width: 768px) {
+#temp {
+  font-size: 7em;
+}
+
+#temp+span {
+  font-size: 2em;
+}
+
+#cityName {
+  font-size: 1em;
+}
+
+@media only screen and (min-width: 769px) {
   .main {
-    width: 100%;
-    height: 80vh;
+    width: 75%;
+    height: 0;
+    padding-top: 46.875%;
+    box-shadow: .5rem .5rem 1rem rgba(0, 0, 0, .2), -.5rem .5rem 1rem rgba(0, 0, 0, .2);
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
   }
   .main-info {
-    width: 100%;
-    height: 80vh;
-    background: rgba(256, 256, 256, 0);
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(256, 256, 256, 1);
+    box-sizing: border-box;
+    padding: 3rem;
   }
   #main-photo {
-    display: none;
+    width: 50%;
+    height: 100%;
+    background: url('../clear_sky.jpg');
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 50%;
   }
-}
-
-@media only screen and (max-width: 500px) {
-  #icon {
-    font-size: 5em;
+  #temp {
+    font-size: 8em;
+  }
+  #cityName {
+    font-size: 1.5em;
+    margin-top: 1em;
   }
 }

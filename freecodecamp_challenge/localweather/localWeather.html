@@ -18,13 +18,9 @@
       <i id="icon" class="wi "></i>
       <div class="bottom">
         <div id="desc"></div>
-        <span id="temp" class="celsius"></span>
+        <span id="temp"></span><span class="celsius"></span>
         <div id="cityName"></div>
       </div>
-
-      <!-- <div id="month"></div>
-      <div id="date"></div> -->
-
     </div>
     <div id="main-photo"></div>
   </div>
@@ -34,11 +30,6 @@
 
 
   <script>
-    // var months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    // var time = new Date();
-    // document.getElementById('month').innerHTML = months[time.getMonth()];
-    // document.getElementById('date').innerHTML = time.getDate() + 'th';
-
     var icons = ['wi-day-sunny', 'wi-day-sunny', 'wi-thunderstorm', 'wi-raindrops', 'wi-cloudy', 'wi-umbrella', 'wi-snow-wind', 'wi-fog', 'wi-day-sunny'];
     var degree;
     window.onload =
@@ -49,8 +40,8 @@
           alert("geolocation is not supported");
         }
 
-        var temp = document.getElementById("temp");
-        temp.onclick = toggleUnit;
+        var unit = document.querySelector(".celsius");
+        unit.onclick = toggleUnit;
       }
 
     function getCoords(position) {
@@ -80,9 +71,8 @@
           degree = Math.floor(weather.temp);
           document.getElementById("desc").innerHTML = weather.desc.toUpperCase();
           document.getElementById("icon").classList.add(icons[weather.imgid]);
-          console.log(weather.imgid);
-          console.log(icons[weather.imgid]);
-          document.getElementById("temp").innerHTML = Math.floor(weather.temp) + "&#x2103;";
+          document.getElementById("temp").innerHTML = Math.floor(weather.temp);
+          document.querySelector(".celsius").innerHTML = "&#x2103;";
           document.getElementById('background').style.background = "url(" + weather.imgid + ".jpg)";
           document.getElementById('background').style.backgroundSize = 'cover';
           document.getElementById('main-photo').style.background = "url(" + weather.imgid + ".jpg)";
@@ -106,16 +96,18 @@
 
     }
 
-    function toggleUnit(eventObj) {
-      var unit = eventObj.target.className;
+    function toggleUnit(e) {
+      var unit = e.target.className;
       var ele = document.getElementById("temp")
       if (unit == "celsius") {
-        ele.innerHTML = Math.round(degree * 9 / 5 + 32) + '&#x2109;';
-        ele.className = "fahrenheit";
+        ele.innerHTML = Math.round(degree * 9 / 5 + 32);
+        e.target.innerHTML = '&#x2109;'
+        e.target.className = "fahrenheit";
 
       } else {
-        ele.innerHTML = degree + "&#x2103;";
-        ele.className = "celsius";
+        ele.innerHTML = degree;
+        e.target.innerHTML = "&#x2103;";
+        e.target.className = "celsius";
       }
     }
   </script>
