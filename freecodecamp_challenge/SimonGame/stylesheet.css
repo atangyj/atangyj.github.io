@@ -1,0 +1,202 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+#container {
+  width: 50%;
+  padding-top: 50%;
+  background: grey;
+  position: relative;
+  border-radius: 50%;
+  border: .5rem solid #000;
+  margin: auto;
+  /* display: grid; */
+}
+
+#game-control {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  bottom: 20%;
+  right: 20%;
+  background: #fff;
+  border-radius: 50%;
+  border: .5rem solid #000;
+  text-align: center;
+  z-index: 10;
+}
+
+#green {
+  background: green;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 50%;
+  bottom: 50%;
+  border-top-left-radius: 100%;
+  border-right: .25rem solid #000;
+  border-bottom: .25rem solid #000;
+  transition: .2s;
+}
+
+#red {
+  background: red;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 50%;
+  bottom: 50%;
+  border-top-right-radius: 100%;
+  border-left: .25rem solid #000;
+  border-bottom: .25rem solid #000;
+  transition: .2s;
+}
+
+#yellow {
+  background: yellow;
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  left: 0;
+  bottom: 0;
+  border-bottom-left-radius: 100%;
+  border-right: .25rem solid #000;
+  border-top: .25rem solid #000;
+  transition: .2s;
+}
+
+#blue {
+  background: blue;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 50%;
+  bottom: 0;
+  border-bottom-right-radius: 100%;
+  border-left: .25rem solid #000;
+  border-top: .25rem solid #000;
+  transition: .2s;
+}
+
+.row {}
+
+.display, .start, .strict {
+  display: inline-block;
+  width: 30%;
+}
+
+h1 {
+  font-size: 5rem;
+  padding-top: 10%;
+  padding-bottom: 5%;
+}
+
+.display h2 {
+  margin: auto;
+  margin-bottom: 4px;
+  width: 80%;
+  padding: 6px 2px;
+  border: 3px solid #000;
+  border-radius: 5px;
+  font-size: 2rem;
+  background-color: #420A0A;
+  color: #420A0A;
+  animation-name: gameStart;
+  animation-duration: .5s;
+  animation-iteration-count: 3;
+  animation-play-state: paused;
+}
+
+.isON {
+  color: #000;
+}
+
+.btn {
+  width: 35px;
+  height: 35px;
+  background: pink;
+  margin-bottom: 4px;
+  display: inline-block;
+  border-radius: 50%;
+  border: 5px solid #000;
+  cursor: pointer;
+}
+
+.start .btn {
+  background: red;
+}
+
+.strict .btn {
+  background: yellow;
+}
+
+.switch {
+  width: 95px;
+  height: 50px;
+  position: relative;
+  display: inline-block;
+  margin-top: 15%;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ccc;
+  border-radius: 50px;
+  transition: .5s;
+}
+
+.slider:before {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border-radius: 50%;
+  content: "";
+  top: 5px;
+  left: 5px;
+  transition: .5s;
+}
+
+.slider:after {
+  content: "OFF";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);
+}
+
+input:checked+.slider {
+  background: blue;
+}
+
+input:checked+.slider:before {
+  transform: translateX(100%);
+}
+
+input:checked+.slider:after {
+  content: 'ON';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-25%, -50%);
+  color: #fff;
+}
+
+@keyframes gameStart {
+  from {
+    color: #420A0A;
+  }
+  to {
+    color: red;
+  }
+}
